@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("SuccessCollision") && IsFullyInsideCollider(other))
         {
+            //SpawnManager.OpenSpot();
             HandleLevelSuccess();
         }
     }
@@ -94,12 +95,15 @@ public class PlayerController : MonoBehaviour
         transform.position = initialPos;
         transform.rotation = initialRot;
         hasMadeFirstMove = false;
+      
 
         // Increment level
         LevelCounterManager.Instance?.AddLevel();
 
         // Open a new parking spot
         SpawnManager?.OpenSpot();
+
+
     }
 
     private void OnTriggerEnter(Collider other)
