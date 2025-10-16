@@ -1,33 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
 public class Deathscreen : MonoBehaviour
 {
-    public TextMeshProUGUI levelReachedText; // Assign in Inspector
+    [Header("UI References")]
+    public TextMeshProUGUI levelReachedText; // Drag your Text object here
 
-    private void OnEnable()
+    public void ShowDeathScreen()
     {
-        // Update the message when the death screen is shown
+        // Display the current level reached
         if (LevelCounterManager.Instance != null && levelReachedText != null)
         {
-            int currentLevel = LevelCounterManager.Instance.GetCurrentLevel();
-            levelReachedText.text = "You reached Level " + currentLevel + "!";
+            levelReachedText.text = "You reached Level: " + LevelCounterManager.Instance.GetCurrentLevel();
         }
+
+        gameObject.SetActive(true);
+        Time.timeScale = 0; // Pause the game
     }
 
     public void OnRestartButton()
     {
-        // Reset level counter to 1
-        if (LevelCounterManager.Instance != null)
-        {
-            LevelCounterManager.Instance.ResetCounter();
-        }
-
         Time.timeScale = 1;
-        SceneManager.LoadScene(1);
+
+        // Reset Level Counter
+        LevelCounterManager.Instance?.ResetCounter();
+
+        // Reload current scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void OnQuitButton()

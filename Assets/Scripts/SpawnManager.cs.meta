@@ -3,7 +3,9 @@ guid: d2739ed40932c104ca12cdde411d9a8a
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - MovingRedCar: {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
+  - glowMarkerPrefab: {fileID: 3342684057611060842, guid: 0c93ca951cb3f1a479529b581fad1ce8, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
