@@ -1968,6 +1968,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06a31a1d3b8e2e3479a23d043f07760a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelReachedText: {fileID: 573498957}
 --- !u!114 &233271091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3181,6 +3182,18 @@ MonoBehaviour:
   - {fileID: 1708905659}
   - {fileID: 319862671}
   - {fileID: 508639220}
+  - {fileID: 1531820455}
+  - {fileID: 1841994230}
+  - {fileID: 732379615}
+  - {fileID: 915809236}
+  - {fileID: 1354764650}
+  - {fileID: 430138897}
+  - {fileID: 1800256454}
+  - {fileID: 1445807022}
+  - {fileID: 1260106735}
+  - {fileID: 1708905659}
+  - {fileID: 319862671}
+  - {fileID: 508639220}
   - {fileID: 879651848}
   - {fileID: 1743115114}
   - {fileID: 1128483940}
@@ -3203,17 +3216,8 @@ MonoBehaviour:
   - {fileID: 947363916}
   - {fileID: 706193115}
   - {fileID: 397295861}
-  CarInitialPos:
-  - {fileID: 254510412}
-  - {fileID: 991342383}
-  - {fileID: 1998671116}
-  - {fileID: 1283212567}
-  - {fileID: 1952975909}
-  - {fileID: 1690634176}
-  MovingRedCar: {fileID: 8174678674033954747, guid: 1548278fc51ae3645864f446dd2b7aa5, type: 3}
-  RespawnTime: 1.52
   glowMarkerPrefab: {fileID: 3342684057611060842, guid: 0c93ca951cb3f1a479529b581fad1ce8, type: 3}
-  markerOffset: {x: 0, y: 0.5, z: 0}
+  respawnDelay: 0.5
 --- !u!1 &390932166 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: baa76f9bf7b22f54dadbd6d8388a889a, type: 3}
@@ -10130,7 +10134,7 @@ GameObject:
   - component: {fileID: 976458110}
   m_Layer: 0
   m_Name: Enemy Cars for 2nd Parking Area
-  m_TagString: ParkedCars
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11204,7 +11208,7 @@ GameObject:
   - component: {fileID: 1055356202}
   m_Layer: 0
   m_Name: Enemy Cars for 4th Parking Area
-  m_TagString: ParkedCars
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15738,7 +15742,7 @@ GameObject:
   - component: {fileID: 1382962878}
   m_Layer: 0
   m_Name: Enemy Cars for 1st Area
-  m_TagString: ParkedCars
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -1,97 +1,111 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class SpawnManager : MonoBehaviour
 {
-    public GameObject[] parkedCars;       // All parked cars
-    public GameObject[] CarInitialPos;    // Moving car spawn positions
-    public GameObject MovingRedCar;
-    public float RespawnTime = 10f;
+    [Header("Parking Spots & Cars")]
+    public List<GameObject> parkedCars = new List<GameObject>();
+    private GameObject currentOpenSpot;
 
-    [Header("Glow Marker")]
+    [Header("Visuals")]
     public GameObject glowMarkerPrefab;
-    public Vector3 markerOffset = new Vector3(0, 2f, 0);
+    private GameObject currentGlowMarker;
 
-    private GameObject activeGlowMarker;
-    private int lastOpenIndex = -1;
+    [Header("Delays")]
+    public float respawnDelay = 0.5f;
 
-    void Start()
+    private void Start()
     {
-        // If parkedCars already assigned, open spot immediately
-        if (parkedCars != null && parkedCars.Length > 0)
-        {
-            OpenSpot();
-        }
-        else
-        {
-            // Otherwise wait until parkedCars are populated
-            StartCoroutine(InitializeAfterDelay());
-        }
-
-        InvokeRepeating("SpawnMovingCar", 0f, RespawnTime);
+        // Initialize after short delay to allow scene to load
+        StartCoroutine(InitializeAfterDelay());
     }
 
     private IEnumerator InitializeAfterDelay()
     {
-        while (parkedCars == null || parkedCars.Length == 0)
-        {
-            parkedCars = GameObject.FindGameObjectsWithTag("ParkedCars");
-            yield return new WaitForSeconds(0.1f);
-        }
-
+        yield return new WaitForSeconds(0.5f);
+        RefreshParkedCars();
         OpenSpot();
     }
 
+    /// <summary>
+    /// Finds all parked cars currently active in the scene.
+    /// </summary>
+    private void RefreshParkedCars()
+    {
+        parkedCars.Clear();
+        foreach (GameObject car in GameObject.FindGameObjectsWithTag("ParkedCars"))
+        {
+            if (car.activeInHierarchy)
+            {
+                parkedCars.Add(car);
+            }
+        }
+
+        Debug.Log($"🚗 Refreshed parkedCars list: {parkedCars.Count} cars found.");
+    }
+
+    /// <summary>
+    /// Selects a random car to despawn and marks that as the new open parking spot.
+    /// </summary>
     public void OpenSpot()
     {
-        if (parkedCars == null || parkedCars.Length == 0) return;
+        RefreshParkedCars();
 
-        // Reactivate all cars
-        foreach (var car in parkedCars)
-            car.SetActive(true);
-
-        // Pick a new spot different from last
-        int newIndex;
-        do
+        if (parkedCars.Count == 0)
         {
-            newIndex = Random.Range(0, parkedCars.Length);
-        } while (newIndex == lastOpenIndex && parkedCars.Length > 1);
-
-        parkedCars[newIndex].SetActive(false);
-        lastOpenIndex = newIndex;
-
-        // Move glow marker above new spot
-        MoveGlowMarkerToSpot(parkedCars[newIndex]);
-    }
-
-    private void MoveGlowMarkerToSpot(GameObject spot)
-    {
-        if (glowMarkerPrefab == null) return;
-
-        Vector3 pos = spot.transform.position + markerOffset;
-
-        if (activeGlowMarker == null)
-            activeGlowMarker = Instantiate(glowMarkerPrefab, pos, Quaternion.identity);
-        else
-        {
-            activeGlowMarker.transform.position = pos;
-            activeGlowMarker.SetActive(true);
+            Debug.LogWarning("⚠️ No parked cars found — cannot create open spot.");
+            return;
         }
+
+        // Pick a random parked car
+        int index = Random.Range(0, parkedCars.Count);
+        currentOpenSpot = parkedCars[index];
+
+        if (currentOpenSpot == null)
+        {
+            Debug.LogWarning("⚠️ Selected parked car is null!");
+            return;
+        }
+
+        // Remove that car to open the space
+        currentOpenSpot.SetActive(false);
+
+        Debug.Log($"🅿️ New open parking spot: {currentOpenSpot.name}");
+
+        // Spawn glow marker above it
+        SpawnGlowMarker(currentOpenSpot.transform.position);
     }
 
+    /// <summary>
+    /// Spawns the glow marker directly above the open parking spot.
+    /// </summary>
+    private void SpawnGlowMarker(Vector3 position)
+    {
+        if (glowMarkerPrefab == null)
+        {
+            Debug.LogWarning("⚠️ Glow Marker Prefab not assigned in SpawnManager!");
+            return;
+        }
+
+        // Remove any previous marker
+        if (currentGlowMarker != null)
+            Destroy(currentGlowMarker);
+
+        // Spawn new one slightly above the open spot
+        Vector3 markerPos = position + Vector3.up * 1.5f;
+        currentGlowMarker = Instantiate(glowMarkerPrefab, markerPos, Quaternion.identity);
+    }
+
+    /// <summary>
+    /// Called when player makes their first move.
+    /// </summary>
     public void HideGlowMarker()
     {
-        if (activeGlowMarker != null)
-            activeGlowMarker.SetActive(false);
-    }
-
-    public void SpawnMovingCar()
-    {
-        if (CarInitialPos == null || CarInitialPos.Length == 0 || MovingRedCar == null) return;
-
-        int spawnIndex = Random.Range(0, CarInitialPos.Length);
-        Instantiate(MovingRedCar,
-            CarInitialPos[spawnIndex].transform.position,
-            CarInitialPos[spawnIndex].transform.rotation);
+        if (currentGlowMarker != null)
+        {
+            Destroy(currentGlowMarker);
+            currentGlowMarker = null;
+        }
     }
 }
