@@ -32,13 +32,6 @@ public class PlayerController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         forwardInput = Input.GetAxis("Vertical");
 
-        // First movement hides glow marker
-        if (!hasMadeFirstMove && (Mathf.Abs(horizontalInput) > 0.01f || Mathf.Abs(forwardInput) > 0.01f))
-        {
-            hasMadeFirstMove = true;
-            SpawnManager?.HideGlowMarker();
-        }
-
         // Movement and rotation
         transform.Translate(Vector3.left * Time.deltaTime * Speed * forwardInput);
         transform.Rotate(Vector3.up * Time.deltaTime * turnSpeed * horizontalInput);
