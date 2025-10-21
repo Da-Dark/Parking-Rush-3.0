@@ -5,16 +5,17 @@ using System.Collections.Generic;
 public class SpawnManager : MonoBehaviour
 {
     [Header("Parking Spots & Cars")]
-    public List<GameObject> parkedCars = new List<GameObject>(); // cars tagged "ParkedCars"
+    public List<GameObject> parkedCars = new List<GameObject>(); // Cars tagged "ParkedCars"
     private GameObject currentOpenSpot;
     private GameObject previousOpenSpot;
 
     [Header("Flasher Settings")]
-    public GameObject flashMarkerPrefab; // assign prefab that now has OpenSpotFlasherWithMarker attached
-    public float markerHeight = 0.5f;
+    public GameObject flashMarkerPrefab; // Prefab with OpenSpotFlasherWithMarker attached
     public float respawnDelay = 0.5f;
 
-    private bool firstLevelFlasherSpawned = false;
+    [Header("Flash Control")]
+    public List<OpenSpotFlasherWithMarker> activeFlashMarkers = new List<OpenSpotFlasherWithMarker>();
+    public bool firstLevelFlashDone = false; // Only flash in level 1
 
     private void Start()
     {
@@ -42,38 +43,31 @@ public class SpawnManager : MonoBehaviour
     {
         RefreshParkedCars();
 
-        // Re-enable previous spot
+        // Re-enable previous open spot
         if (previousOpenSpot != null)
-        {
             previousOpenSpot.SetActive(true);
-            previousOpenSpot = null;
-        }
 
         if (parkedCars.Count == 0)
         {
-            Debug.LogWarning("⚠️ No parked cars found — cannot open a new spot.");
+            Debug.LogWarning("No parked cars found — cannot open a new spot.");
             return;
         }
 
         int index = Random.Range(0, parkedCars.Count);
         currentOpenSpot = parkedCars[index];
-
         if (currentOpenSpot == null)
         {
-            Debug.LogWarning("⚠️ Selected parked car is null!");
+            Debug.LogWarning("Selected parked car is null!");
             return;
         }
 
-        currentOpenSpot.SetActive(false);
+        currentOpenSpot.SetActive(false); // Open spot
         previousOpenSpot = currentOpenSpot;
 
-        // Only spawn flashing marker on Level 1
-        if (!firstLevelFlasherSpawned &&
-            LevelCounterManager.Instance != null &&
-            LevelCounterManager.Instance.GetCurrentLevel() == 1)
+        // Only flash on level 1
+        if (!firstLevelFlashDone)
         {
             SpawnFlashingMarker(currentOpenSpot.transform.position);
-            firstLevelFlasherSpawned = true;
         }
     }
 
@@ -81,21 +75,32 @@ public class SpawnManager : MonoBehaviour
     {
         if (flashMarkerPrefab == null)
         {
-            Debug.LogWarning("⚠️ No flashMarkerPrefab assigned in SpawnManager.");
+            Debug.LogWarning("No flashMarkerPrefab assigned!");
             return;
         }
 
-        Vector3 spawnPos = position + Vector3.up * markerHeight;
-        GameObject marker = Instantiate(flashMarkerPrefab, spawnPos, Quaternion.identity);
-
+        GameObject marker = Instantiate(flashMarkerPrefab, position + Vector3.up * 0.5f, Quaternion.identity);
         OpenSpotFlasherWithMarker flasher = marker.GetComponent<OpenSpotFlasherWithMarker>();
         if (flasher != null)
         {
-            flasher.shouldStopOnFirstInput = true;
+            activeFlashMarkers.Add(flasher);
         }
         else
         {
-            Debug.LogWarning("⚠️ flashMarkerPrefab does not have OpenSpotFlasherWithMarker attached!");
+            Debug.LogWarning("flashMarkerPrefab does not have OpenSpotFlasherWithMarker attached!");
         }
+    }
+
+    // Called by PlayerController on first input
+    public void OnPlayerFirstInput()
+    {
+        foreach (var flasher in activeFlashMarkers)
+        {
+            if (flasher != null)
+                flasher.StopFlashing();
+        }
+
+        activeFlashMarkers.Clear();
+        firstLevelFlashDone = true;
     }
 }

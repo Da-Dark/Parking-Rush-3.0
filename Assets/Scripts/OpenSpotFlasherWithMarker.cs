@@ -3,45 +3,31 @@ using System.Collections;
 
 public class OpenSpotFlasherWithMarker : MonoBehaviour
 {
-    [Header("Flashing Settings")]
+    [Header("Flash Settings")]
     public Color flashColor = Color.yellow;
     public float flashSpeed = 2f;
     public float emissionIntensity = 2f;
-
-    [HideInInspector]
-    public bool shouldStopOnFirstInput = false; // set by SpawnManager
+    public float fadeOutDuration = 1f; // How long to fade out after first input
 
     private Material flashMat;
     private Coroutine flashRoutine;
     private bool isFlashing = true;
 
-    void Awake()
+    void Start()
     {
-        // Ensure the object has a Renderer
         Renderer r = GetComponent<Renderer>();
         if (r == null)
         {
-            Debug.LogWarning($"⚠️ No Renderer found on {gameObject.name}, flashing disabled.");
-            isFlashing = false;
+            Debug.LogWarning($"No Renderer found on {gameObject.name}, cannot flash!");
             return;
         }
 
-        // Use a unique material instance
+        // Make a unique material instance for this marker
         flashMat = new Material(r.material);
         r.material = flashMat;
 
         // Start flashing
         flashRoutine = StartCoroutine(FlashEffect());
-    }
-
-    void Update()
-    {
-        // Stop flashing on first player input
-        if (isFlashing && shouldStopOnFirstInput &&
-            (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0))
-        {
-            StopFlashing();
-        }
     }
 
     private IEnumerator FlashEffect()
@@ -55,21 +41,39 @@ public class OpenSpotFlasherWithMarker : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Call this when player makes their first input.
+    /// </summary>
     public void StopFlashing()
     {
         if (!isFlashing) return;
 
         isFlashing = false;
 
+        // Stop the flashing coroutine
         if (flashRoutine != null)
             StopCoroutine(flashRoutine);
 
-        if (flashMat != null)
-            flashMat.SetColor("_EmissionColor", Color.black);
+        // Start fading out smoothly
+        StartCoroutine(FadeOutAndDestroy());
+    }
 
-        // Destroy the marker completely
+    private IEnumerator FadeOutAndDestroy()
+    {
+        float timer = 0f;
+        Color initialEmission = flashMat.GetColor("_EmissionColor");
+
+        while (timer < fadeOutDuration)
+        {
+            float t = timer / fadeOutDuration;
+            flashMat.SetColor("_EmissionColor", Color.Lerp(initialEmission, Color.black, t));
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        flashMat.SetColor("_EmissionColor", Color.black);
+
+        // Destroy the marker GameObject after fading
         Destroy(gameObject);
-
-        Debug.Log($"🛑 Flashing stopped and marker destroyed for {gameObject.name}");
     }
 }

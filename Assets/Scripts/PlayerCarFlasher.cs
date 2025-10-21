@@ -1,84 +1,100 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Renderer))]
-public class PlayerCarFlasherMulti : MonoBehaviour
+public class PlayerCarFlasher : MonoBehaviour
 {
-    [Header("Flashing Settings")]
-    public Color flashColor = Color.cyan;      // Color of the flashing overlay
-    public float flashSpeed = 2f;              // Speed of the flash
-    public float emissionIntensity = 2f;       // Intensity of the emission
+    [Header("Flash Settings")]
+    public Color flashColor = Color.yellow;
+    public float initialIntensity = 5f;  // Strong start
+    public float flashSpeed = 3f;        // Speed of flashing
+    public float fadeOutDuration = 2f;   // Duration to fade out after first input
 
-    private Material[] flashMats;              // Store a separate material for each renderer
+    private Material[] flashMats;
     private Coroutine flashRoutine;
-    private bool isFlashing = false;
+    private bool isFlashing = true;
+    private bool isFadingOut = false;
 
     void Start()
     {
-        // Only flash if Level 1
-        if (LevelCounterManager.Instance != null && LevelCounterManager.Instance.GetCurrentLevel() == 1)
+        // Only flash on Level 1
+        if (LevelCounterManager.Instance != null && LevelCounterManager.Instance.GetCurrentLevel() != 1)
         {
-            Renderer[] renderers = GetComponentsInChildren<Renderer>();
-            flashMats = new Material[renderers.Length];
-
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                // Instantiate a unique material for each renderer
-                flashMats[i] = new Material(renderers[i].material);
-                renderers[i].material = flashMats[i];
-
-                // Enable emission for each material
-                flashMats[i].EnableKeyword("_EMISSION");
-            }
-
-            isFlashing = true;
-            flashRoutine = StartCoroutine(FlashEffect());
+            isFlashing = false;
+            return;
         }
+
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        flashMats = new Material[renderers.Length];
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            flashMats[i] = new Material(renderers[i].material);
+            flashMats[i].EnableKeyword("_EMISSION");
+            renderers[i].material = flashMats[i];
+        }
+
+        if (flashMats.Length > 0)
+            flashRoutine = StartCoroutine(FlashEffect());
     }
 
     void Update()
     {
-        // Stop flashing when the player makes the first input
-        if (isFlashing && (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0))
+        if (isFlashing && !isFadingOut && (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0))
         {
-            StopFlashing();
+            StartCoroutine(FadeOutFlashing());
         }
     }
 
     private IEnumerator FlashEffect()
     {
+        float intensity = initialIntensity;
+
         while (isFlashing)
         {
             float t = (Mathf.Sin(Time.time * flashSpeed) + 1f) / 2f;
-            Color currentColor = Color.Lerp(Color.black, flashColor, t);
+            Color currentColor = flashColor * t * intensity;
 
             foreach (Material mat in flashMats)
             {
-                mat.SetColor("_EmissionColor", currentColor * emissionIntensity);
+                mat.SetColor("_EmissionColor", currentColor);
             }
 
             yield return null;
         }
     }
 
-    public void StopFlashing()
+    private IEnumerator FadeOutFlashing()
     {
-        if (!isFlashing) return;
-
-        isFlashing = false;
+        isFadingOut = true;
 
         if (flashRoutine != null)
             StopCoroutine(flashRoutine);
 
-        if (flashMats != null)
+        // Record current emission colors
+        Color[] initialColors = new Color[flashMats.Length];
+        for (int i = 0; i < flashMats.Length; i++)
+            initialColors[i] = flashMats[i].GetColor("_EmissionColor");
+
+        float elapsed = 0f;
+        while (elapsed < fadeOutDuration)
         {
-            foreach (Material mat in flashMats)
+            elapsed += Time.deltaTime;
+            float t = 1f - Mathf.Clamp01(elapsed / fadeOutDuration);
+
+            for (int i = 0; i < flashMats.Length; i++)
             {
-                if (mat != null)
-                    mat.SetColor("_EmissionColor", Color.black);
+                flashMats[i].SetColor("_EmissionColor", initialColors[i] * t);
             }
+
+            yield return null;
         }
 
-        Debug.Log("🛑 Player car flashing stopped.");
+        foreach (Material mat in flashMats)
+        {
+            mat.SetColor("_EmissionColor", Color.black);
+        }
+
+        isFlashing = false;
+        isFadingOut = false;
     }
 }

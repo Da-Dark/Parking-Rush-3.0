@@ -32,11 +32,21 @@ public class PlayerController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         forwardInput = Input.GetAxis("Vertical");
 
-        // Movement and rotation
-        transform.Translate(Vector3.left * Time.deltaTime * Speed * forwardInput);
-        transform.Rotate(Vector3.up * Time.deltaTime * turnSpeed * horizontalInput);
+        // First movement detection
+        if (!hasMadeFirstMove && (Mathf.Abs(horizontalInput) > 0.01f || Mathf.Abs(forwardInput) > 0.01f))
+        {
+            hasMadeFirstMove = true;
 
-        // Clamp player inside bounds
+            // Notify SpawnManager so flashing markers stop
+            if (SpawnManager != null)
+                SpawnManager.OnPlayerFirstInput();
+        }
+
+        // Move player
+        transform.Translate(Vector3.left * Speed * forwardInput * Time.deltaTime);
+        transform.Rotate(Vector3.up * turnSpeed * horizontalInput * Time.deltaTime);
+
+        // Clamp within bounds
         transform.position = new Vector3(
             Mathf.Clamp(transform.position.x, -xRange, xRange),
             transform.position.y,
@@ -46,10 +56,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("SuccessCollision") && IsFullyInsideCollider(other))
+        if (other.CompareTag("SuccessCollision"))
         {
-            //SpawnManager.OpenSpot();
-            HandleLevelSuccess();
+            if (IsFullyInsideCollider(other))
+            {
+                HandleLevelSuccess();
+            }
         }
     }
 
@@ -84,28 +96,20 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLevelSuccess()
     {
-        Debug.Log("✅ Level Completed!");
         transform.position = initialPos;
         transform.rotation = initialRot;
         hasMadeFirstMove = false;
-      
 
-        // Increment level
-        LevelCounterManager.Instance?.AddLevel();
-
-        // Open a new parking spot
-        SpawnManager?.OpenSpot();
-
-
+        if (SpawnManager != null)
+            SpawnManager.OpenSpot();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("ParkedCars"))
+        if (other.CompareTag("Car"))
         {
-            Debug.Log("💥 Player hit a car!");
             Deathscreen.SetActive(true);
-            Time.timeScale = 0;
+            Time.timeScale = 0f;
         }
     }
 }

@@ -5863,8 +5863,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flashColor: {r: 0.97153854, g: 1, b: 0.31764707, a: 1}
-  flashSpeed: 4.5
-  emissionIntensity: 2
+  initialIntensity: 5
+  flashSpeed: 4.15
+  fadeOutDuration: 1.23
 --- !u!1001 &612585775
 PrefabInstance:
   m_ObjectHideFlags: 0

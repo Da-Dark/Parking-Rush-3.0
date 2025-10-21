@@ -120,6 +120,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flashColor: {r: 0.9915424, g: 1, b: 0.65471697, a: 1}
-  flashSpeed: 4.5
+  flashSpeed: 4.15
   emissionIntensity: 2
-  shouldStopOnFirstInput: 0
+  fadeOutDuration: 1.24
