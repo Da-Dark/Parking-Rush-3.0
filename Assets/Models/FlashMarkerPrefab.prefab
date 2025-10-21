@@ -119,7 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214a9d0bc26beb04fbdaa6169a212878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flashColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  flashSpeed: 2
+  flashColor: {r: 0.9915424, g: 1, b: 0.65471697, a: 1}
+  flashSpeed: 4.5
   emissionIntensity: 2
   shouldStopOnFirstInput: 0

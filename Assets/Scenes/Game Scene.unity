@@ -3217,6 +3217,7 @@ MonoBehaviour:
   - {fileID: 706193115}
   - {fileID: 397295861}
   flashMarkerPrefab: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
+  markerHeight: 0.5
   respawnDelay: 0.5
 --- !u!1 &390932166 stripped
 GameObject:
@@ -4379,6 +4380,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 9b27663d5c353b14299c0110cbac2cde, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7cf0e009c342f4e4f86bd545ba85e025, type: 2}
     - target: {fileID: 919132149155446097, guid: 9b27663d5c353b14299c0110cbac2cde, type: 3}
       propertyPath: m_Name
       value: Car Model
@@ -4400,6 +4405,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9b27663d5c353b14299c0110cbac2cde, type: 3}
       insertIndex: -1
       addedObject: {fileID: 608972090}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9b27663d5c353b14299c0110cbac2cde, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 608972095}
   m_SourcePrefab: {fileID: 100100000, guid: 9b27663d5c353b14299c0110cbac2cde, type: 3}
 --- !u!1001 &488956235
 PrefabInstance:
@@ -5842,6 +5850,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &608972095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 608972085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c39f600443f63b488834a9cc4ec4709, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashColor: {r: 0.97153854, g: 1, b: 0.31764707, a: 1}
+  flashSpeed: 4.5
+  emissionIntensity: 2
 --- !u!1001 &612585775
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6000,9 +6023,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214a9d0bc26beb04fbdaa6169a212878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flashColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  flashSpeed: 2
+  flashColor: {r: 0.972549, g: 1, b: 0.31764707, a: 1}
+  flashSpeed: 4.5
   emissionIntensity: 2
+  shouldStopOnFirstInput: 0
 --- !u!1001 &637078409
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19786,7 +19810,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlashMarkerPrefab
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5213034723849228408, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
