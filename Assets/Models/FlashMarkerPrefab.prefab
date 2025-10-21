@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5689994478148194321}
   - component: {fileID: 2081432889386707992}
   - component: {fileID: 2478181497660681524}
+  - component: {fileID: 5213034723849228408}
   m_Layer: 0
   m_Name: FlashMarkerPrefab
   m_TagString: Untagged
@@ -106,3 +107,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &5213034723849228408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8985795512352566415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 214a9d0bc26beb04fbdaa6169a212878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  flashSpeed: 2
+  emissionIntensity: 2
+  shouldStopOnFirstInput: 0

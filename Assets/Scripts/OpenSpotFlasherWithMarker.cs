@@ -1,42 +1,44 @@
 ﻿using UnityEngine;
-using System.Collections; // ✅ Needed for IEnumerator
+using System.Collections;
 
 public class OpenSpotFlasherWithMarker : MonoBehaviour
 {
-    [Header("Flash Settings")]
-    public Color flashColor = Color.yellow;   // The glow color
-    public float flashSpeed = 2f;             // Speed of the flashing
-    public float emissionIntensity = 2f;      // How bright the glow is
+    [Header("Flashing Settings")]
+    public Color flashColor = Color.yellow;
+    public float flashSpeed = 2f;
+    public float emissionIntensity = 2f;
 
-    private Material flashingMaterial;
+    [HideInInspector]
+    public bool shouldStopOnFirstInput = false; // set by SpawnManager
+
+    private Material flashMat;
     private Coroutine flashRoutine;
     private bool isFlashing = true;
 
-    private void Start()
+    void Awake()
     {
-        // Clone material so we don’t affect all objects using it
-        Renderer rend = GetComponent<Renderer>();
-        if (rend != null)
+        // Ensure the object has a Renderer
+        Renderer r = GetComponent<Renderer>();
+        if (r == null)
         {
-            flashingMaterial = new Material(rend.material);
-            rend.material = flashingMaterial;
+            Debug.LogWarning($"⚠️ No Renderer found on {gameObject.name}, flashing disabled.");
+            isFlashing = false;
+            return;
         }
 
-        // Start flashing automatically at game start
-        if (flashingMaterial != null)
-        {
-            flashRoutine = StartCoroutine(FlashEffect());
-        }
-        else
-        {
-            Debug.LogWarning($"⚠️ No Renderer found on {gameObject.name} for flashing!");
-        }
+        // Use a unique material instance
+        flashMat = new Material(r.material);
+        r.material = flashMat;
+
+        // Start flashing
+        flashRoutine = StartCoroutine(FlashEffect());
     }
 
-    private void Update()
+    void Update()
     {
-        // Stop flashing if player makes their first input
-        if (isFlashing && (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0))
+        // Stop flashing on first player input
+        if (isFlashing && shouldStopOnFirstInput &&
+            (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0))
         {
             StopFlashing();
         }
@@ -44,19 +46,15 @@ public class OpenSpotFlasherWithMarker : MonoBehaviour
 
     private IEnumerator FlashEffect()
     {
-        while (true)
+        while (isFlashing)
         {
-            // Pulse between off (black) and bright color
             float t = (Mathf.Sin(Time.time * flashSpeed) + 1f) / 2f;
             Color currentColor = Color.Lerp(Color.black, flashColor, t);
-            flashingMaterial.SetColor("_EmissionColor", currentColor * emissionIntensity);
+            flashMat.SetColor("_EmissionColor", currentColor * emissionIntensity);
             yield return null;
         }
     }
 
-    /// <summary>
-    /// Stops the flashing and disables emission glow.
-    /// </summary>
     public void StopFlashing()
     {
         if (!isFlashing) return;
@@ -64,15 +62,14 @@ public class OpenSpotFlasherWithMarker : MonoBehaviour
         isFlashing = false;
 
         if (flashRoutine != null)
-        {
             StopCoroutine(flashRoutine);
-        }
 
-        if (flashingMaterial != null)
-        {
-            flashingMaterial.SetColor("_EmissionColor", Color.black);
-        }
+        if (flashMat != null)
+            flashMat.SetColor("_EmissionColor", Color.black);
 
-        Debug.Log($"🛑 Flashing stopped on {gameObject.name}");
+        // Destroy the marker completely
+        Destroy(gameObject);
+
+        Debug.Log($"🛑 Flashing stopped and marker destroyed for {gameObject.name}");
     }
 }
