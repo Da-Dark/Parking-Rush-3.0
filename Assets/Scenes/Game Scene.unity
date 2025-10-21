@@ -3217,8 +3217,16 @@ MonoBehaviour:
   - {fileID: 706193115}
   - {fileID: 397295861}
   flashMarkerPrefab: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
-  markerHeight: 0.5
-  respawnDelay: 0.5
+  markerOffsetY: 0.5
+  movingRedCarPrefab: {fileID: 8174678674033954747, guid: 1548278fc51ae3645864f446dd2b7aa5, type: 3}
+  movingCarSpawners:
+  - {fileID: 254510416}
+  - {fileID: 991342387}
+  - {fileID: 1998671120}
+  - {fileID: 1283212571}
+  - {fileID: 1952975913}
+  - {fileID: 1690634180}
+  movingCarSpawnTime: 1.67
 --- !u!1 &390932166 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: baa76f9bf7b22f54dadbd6d8388a889a, type: 3}
@@ -6027,7 +6035,7 @@ MonoBehaviour:
   flashColor: {r: 0.972549, g: 1, b: 0.31764707, a: 1}
   flashSpeed: 4.5
   emissionIntensity: 2
-  shouldStopOnFirstInput: 0
+  fadeOutDuration: 1
 --- !u!1001 &637078409
 PrefabInstance:
   m_ObjectHideFlags: 0

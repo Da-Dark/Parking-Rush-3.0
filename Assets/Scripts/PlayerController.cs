@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float Speed = 5f;
-    public float turnSpeed = 5f;
+    public float Speed = 5.0f;
+    public float turnSpeed = 5.0f;
 
     private float horizontalInput;
     private float forwardInput;
@@ -32,21 +34,19 @@ public class PlayerController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         forwardInput = Input.GetAxis("Vertical");
 
-        // First movement detection
+        // Stop marker flashing on first input
         if (!hasMadeFirstMove && (Mathf.Abs(horizontalInput) > 0.01f || Mathf.Abs(forwardInput) > 0.01f))
         {
             hasMadeFirstMove = true;
-
-            // Notify SpawnManager so flashing markers stop
             if (SpawnManager != null)
-                SpawnManager.OnPlayerFirstInput();
+                SpawnManager.HideGlowMarker();
         }
 
-        // Move player
-        transform.Translate(Vector3.left * Speed * forwardInput * Time.deltaTime);
-        transform.Rotate(Vector3.up * turnSpeed * horizontalInput * Time.deltaTime);
+        // Movement
+        transform.Translate(Vector3.left * Time.deltaTime * Speed * forwardInput);
+        transform.Rotate(Vector3.up * Time.deltaTime * turnSpeed * horizontalInput);
 
-        // Clamp within bounds
+        // Keep player in bounds
         transform.position = new Vector3(
             Mathf.Clamp(transform.position.x, -xRange, xRange),
             transform.position.y,
@@ -71,7 +71,6 @@ public class PlayerController : MonoBehaviour
         if (playerCol == null) return false;
 
         Bounds playerBounds = playerCol.bounds;
-
         Vector3[] corners = new Vector3[8];
         corners[0] = playerBounds.min;
         corners[7] = playerBounds.max;
@@ -96,9 +95,13 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLevelSuccess()
     {
+        Debug.Log("✅ Level Completed!");
         transform.position = initialPos;
         transform.rotation = initialRot;
         hasMadeFirstMove = false;
+
+        if (LevelCounterManager.Instance != null)
+            LevelCounterManager.Instance.AddLevel();
 
         if (SpawnManager != null)
             SpawnManager.OpenSpot();
@@ -106,10 +109,11 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Car"))
+        if (other.CompareTag("ParkedCars"))
         {
+            Debug.Log("💥 Player hit a car!");
             Deathscreen.SetActive(true);
-            Time.timeScale = 0f;
+            Time.timeScale = 0;
         }
     }
 }
