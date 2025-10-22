@@ -3150,83 +3150,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2739ed40932c104ca12cdde411d9a8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parkedCars:
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
-  - {fileID: 1531820455}
-  - {fileID: 1841994230}
-  - {fileID: 732379615}
-  - {fileID: 915809236}
-  - {fileID: 1354764650}
-  - {fileID: 430138897}
-  - {fileID: 1800256454}
-  - {fileID: 1445807022}
-  - {fileID: 1260106735}
-  - {fileID: 1708905659}
-  - {fileID: 319862671}
-  - {fileID: 508639220}
-  - {fileID: 1531820455}
-  - {fileID: 1841994230}
-  - {fileID: 732379615}
-  - {fileID: 915809236}
-  - {fileID: 1354764650}
-  - {fileID: 430138897}
-  - {fileID: 1800256454}
-  - {fileID: 1445807022}
-  - {fileID: 1260106735}
-  - {fileID: 1708905659}
-  - {fileID: 319862671}
-  - {fileID: 508639220}
-  - {fileID: 879651848}
-  - {fileID: 1743115114}
-  - {fileID: 1128483940}
-  - {fileID: 1099899799}
-  - {fileID: 1434535865}
-  - {fileID: 2054770480}
-  - {fileID: 1174858681}
-  - {fileID: 1976519919}
-  - {fileID: 1799087208}
-  - {fileID: 1632597963}
-  - {fileID: 459848670}
-  - {fileID: 2137274008}
-  - {fileID: 394819889}
-  - {fileID: 1563096450}
-  - {fileID: 1885816001}
-  - {fileID: 1416387571}
-  - {fileID: 593152404}
-  - {fileID: 668370951}
-  - {fileID: 263362228}
-  - {fileID: 947363916}
-  - {fileID: 706193115}
-  - {fileID: 397295861}
-  flashMarkerPrefab: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
-  markerOffsetY: 0.5
-  movingRedCarPrefab: {fileID: 8174678674033954747, guid: 1548278fc51ae3645864f446dd2b7aa5, type: 3}
-  movingCarSpawners:
+  carSpawners:
   - {fileID: 254510416}
   - {fileID: 991342387}
   - {fileID: 1998671120}
   - {fileID: 1283212571}
   - {fileID: 1952975913}
   - {fileID: 1690634180}
-  movingCarSpawnTime: 1.67
+  movingCarPrefab: {fileID: 8174678674033954747, guid: 1548278fc51ae3645864f446dd2b7aa5, type: 3}
+  initialSpawnInterval: 4
+  minSpawnInterval: 1.5
+  spawnRateIncrease: 39.57
+  enableCarSpawning: 1
+  flashMarkerPrefab: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
+  currentLevel: 1
 --- !u!1 &390932166 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: baa76f9bf7b22f54dadbd6d8388a889a, type: 3}
@@ -5874,6 +5811,9 @@ MonoBehaviour:
   initialIntensity: 5
   flashSpeed: 4.15
   fadeOutDuration: 1.23
+  flashMats: []
+  isFlashing: 1
+  isFadingOut: 0
 --- !u!1001 &612585775
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6032,10 +5972,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214a9d0bc26beb04fbdaa6169a212878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flashColor: {r: 0.972549, g: 1, b: 0.31764707, a: 1}
-  flashSpeed: 4.5
-  emissionIntensity: 2
-  fadeOutDuration: 1
+  flashColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  initialIntensity: 5
+  flashSpeed: 3
+  fadeOutDuration: 2
 --- !u!1001 &637078409
 PrefabInstance:
   m_ObjectHideFlags: 0

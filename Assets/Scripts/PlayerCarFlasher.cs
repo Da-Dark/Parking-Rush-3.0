@@ -9,10 +9,10 @@ public class PlayerCarFlasher : MonoBehaviour
     public float flashSpeed = 3f;        // Speed of flashing
     public float fadeOutDuration = 2f;   // Duration to fade out after first input
 
-    private Material[] flashMats;
-    private Coroutine flashRoutine;
-    private bool isFlashing = true;
-    private bool isFadingOut = false;
+    public Material[] flashMats;
+    public Coroutine flashRoutine;
+    public bool isFlashing = true;
+    public bool isFadingOut = false;
 
     void Start()
     {

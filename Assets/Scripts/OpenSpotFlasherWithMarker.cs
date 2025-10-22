@@ -1,79 +1,120 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
 
 public class OpenSpotFlasherWithMarker : MonoBehaviour
 {
-    [Header("Flash Settings")]
+    [Header("Flashing Settings")]
     public Color flashColor = Color.yellow;
-    public float flashSpeed = 2f;
-    public float emissionIntensity = 2f;
-    public float fadeOutDuration = 1f; // How long to fade out after first input
+    public float initialIntensity = 5f;
+    public float flashSpeed = 3f;
+    public float fadeOutDuration = 2f;
 
-    private Material flashMat;
+    private Material markerMat;
     private Coroutine flashRoutine;
-    private bool isFlashing = true;
+
+    PlayerCarFlasher playerCarFlasher;
+    private Transform playerTransform;
+
+    private bool isFadingOut = false;
 
     void Start()
     {
-        Renderer r = GetComponent<Renderer>();
-        if (r == null)
+        // Try to find the player and its flasher
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null)
         {
-            Debug.LogWarning($"No Renderer found on {gameObject.name}, cannot flash!");
-            return;
+            playerCarFlasher = player.GetComponent<PlayerCarFlasher>();
+            playerTransform = player.transform;
         }
 
-        // Make a unique material instance for this marker
-        flashMat = new Material(r.material);
-        r.material = flashMat;
+        // Setup material
+        Renderer rend = GetComponent<Renderer>();
+        if (rend != null)
+        {
+            markerMat = new Material(rend.material);
+            markerMat.EnableKeyword("_EMISSION");
+            rend.material = markerMat;
+        }
 
         // Start flashing
         flashRoutine = StartCoroutine(FlashEffect());
     }
 
-    private IEnumerator FlashEffect()
+    void Update()
     {
-        while (isFlashing)
+        if (playerCarFlasher.isFlashing && !isFadingOut && (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0))
         {
-            float t = (Mathf.Sin(Time.time * flashSpeed) + 1f) / 2f;
-            Color currentColor = Color.Lerp(Color.black, flashColor, t);
-            flashMat.SetColor("_EmissionColor", currentColor * emissionIntensity);
-            yield return null;
+            StartCoroutine(FadeOutFlashing());
         }
     }
 
-    /// <summary>
-    /// Call this when player makes their first input.
-    /// </summary>
-    public void StopFlashing()
+    private IEnumerator FlashEffect()
     {
-        if (!isFlashing) return;
+        float intensity = initialIntensity;
 
-        isFlashing = false;
+        while (!isFadingOut)
+        {
+            float t = (Mathf.Sin(Time.time * flashSpeed) + 1f) / 2f;
+            Color currentColor = flashColor * t * intensity;
+            if (markerMat != null)
+                markerMat.SetColor("_EmissionColor", currentColor);
+            yield return null;
+        }
+    }
+    private IEnumerator FadeOutFlashing()
+    {
+        isFadingOut = true;
 
-        // Stop the flashing coroutine
         if (flashRoutine != null)
             StopCoroutine(flashRoutine);
 
-        // Start fading out smoothly
-        StartCoroutine(FadeOutAndDestroy());
+        // Record current emission colors
+        Color[] initialColors = new Color[playerCarFlasher.flashMats.Length];
+        for (int i = 0; i < playerCarFlasher.flashMats.Length; i++)
+            initialColors[i] = playerCarFlasher.flashMats[i].GetColor("_EmissionColor");
+
+        float elapsed = 0f;
+        while (elapsed < fadeOutDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = 1f - Mathf.Clamp01(elapsed / fadeOutDuration);
+
+            for (int i = 0; i < playerCarFlasher.flashMats.Length; i++)
+            {
+                playerCarFlasher.flashMats[i].SetColor("_EmissionColor", initialColors[i] * t);
+            }
+
+            yield return null;
+        }
+
+        foreach (Material mat in playerCarFlasher.flashMats)
+        {
+            mat.SetColor("_EmissionColor", Color.black);
+        }
+
+        playerCarFlasher.isFlashing = false;
+        isFadingOut = false;
     }
 
     private IEnumerator FadeOutAndDestroy()
     {
-        float timer = 0f;
-        Color initialEmission = flashMat.GetColor("_EmissionColor");
+        isFadingOut = true;
 
-        while (timer < fadeOutDuration)
+        if (flashRoutine != null)
+            StopCoroutine(flashRoutine);
+
+        Color initialColor = markerMat.GetColor("_EmissionColor");
+        float elapsed = 0f;
+
+        while (elapsed < fadeOutDuration)
         {
-            float t = timer / fadeOutDuration;
-            flashMat.SetColor("_EmissionColor", Color.Lerp(initialEmission, Color.black, t));
-            timer += Time.deltaTime;
+            elapsed += Time.deltaTime;
+            float t = 1f - Mathf.Clamp01(elapsed / fadeOutDuration);
+            markerMat.SetColor("_EmissionColor", initialColor * t);
             yield return null;
         }
 
-        flashMat.SetColor("_EmissionColor", Color.black);
-
-        // Destroy the marker GameObject after fading
+        markerMat.SetColor("_EmissionColor", Color.black);
         Destroy(gameObject);
     }
 }
