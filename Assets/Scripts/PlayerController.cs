@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -23,10 +22,13 @@ public class PlayerController : MonoBehaviour
     public float xRange = 9.5f;
     public float zRange = 5.7f;
 
+    private PlayerCarFlasher carFlasher;
+
     void Start()
     {
         initialPos = transform.position;
         initialRot = transform.rotation;
+        carFlasher = GetComponent<PlayerCarFlasher>();
     }
 
     void Update()
@@ -34,19 +36,22 @@ public class PlayerController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         forwardInput = Input.GetAxis("Vertical");
 
-        // Stop marker flashing on first input
         if (!hasMadeFirstMove && (Mathf.Abs(horizontalInput) > 0.01f || Mathf.Abs(forwardInput) > 0.01f))
         {
             hasMadeFirstMove = true;
+
             if (SpawnManager != null)
                 SpawnManager.HideGlowMarker();
+
+            if (carFlasher != null)
+                carFlasher.TriggerFadeOut();
         }
 
         // Movement
         transform.Translate(Vector3.left * Time.deltaTime * Speed * forwardInput);
         transform.Rotate(Vector3.up * Time.deltaTime * turnSpeed * horizontalInput);
 
-        // Keep player in bounds
+        // Keep player within bounds
         transform.position = new Vector3(
             Mathf.Clamp(transform.position.x, -xRange, xRange),
             transform.position.y,
@@ -95,7 +100,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLevelSuccess()
     {
-        Debug.Log("✅ Level Completed!");
+        Debug.Log("PlayerController: Level Completed!");
         transform.position = initialPos;
         transform.rotation = initialRot;
         hasMadeFirstMove = false;
@@ -109,11 +114,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("ParkedCars"))
+        // Option A: die when hitting any car
+        if (other.CompareTag("ParkedCars") || other.CompareTag("MovingCar"))
         {
-            Debug.Log("💥 Player hit a car!");
+            Debug.Log("PlayerController: Player hit a car!");
             Deathscreen.SetActive(true);
-            Time.timeScale = 0;
+            Time.timeScale = 0f;
         }
     }
 }

@@ -1,16 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
 public class Deathscreen : MonoBehaviour
 {
-    public TextMeshProUGUI levelReachedText; // Assign in Inspector
+    public TextMeshProUGUI levelReachedText; // assign in inspector
 
     private void OnEnable()
     {
-        // Update the message when the death screen is shown
         if (LevelCounterManager.Instance != null && levelReachedText != null)
         {
             int currentLevel = LevelCounterManager.Instance.GetCurrentLevel();
@@ -20,13 +17,10 @@ public class Deathscreen : MonoBehaviour
 
     public void OnRestartButton()
     {
-        // Reset level counter to 1
         if (LevelCounterManager.Instance != null)
-        {
             LevelCounterManager.Instance.ResetCounter();
-        }
 
-        Time.timeScale = 1;
+        Time.timeScale = 1f;
         SceneManager.LoadScene(1);
     }
 

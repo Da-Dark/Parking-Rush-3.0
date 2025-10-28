@@ -5,12 +5,12 @@ public class PlayerCarFlasher : MonoBehaviour
 {
     [Header("Flash Settings")]
     public Color flashColor = Color.yellow;
-    public float initialIntensity = 5f;  // Strong start
-    public float flashSpeed = 3f;        // Speed of flashing
-    public float fadeOutDuration = 2f;   // Duration to fade out after first input
+    public float initialIntensity = 5f;
+    public float flashSpeed = 3f;
+    public float fadeOutDuration = 2f;
 
-    public Material[] flashMats;
-    public Coroutine flashRoutine;
+    [HideInInspector] public Material[] flashMats;
+    [HideInInspector] public Coroutine flashRoutine;
     public bool isFlashing = true;
     public bool isFadingOut = false;
 
@@ -28,9 +28,10 @@ public class PlayerCarFlasher : MonoBehaviour
 
         for (int i = 0; i < renderers.Length; i++)
         {
-            flashMats[i] = new Material(renderers[i].material);
-            flashMats[i].EnableKeyword("_EMISSION");
-            renderers[i].material = flashMats[i];
+            Material m = new Material(renderers[i].material);
+            m.EnableKeyword("_EMISSION");
+            renderers[i].material = m;
+            flashMats[i] = m;
         }
 
         if (flashMats.Length > 0)
@@ -39,20 +40,19 @@ public class PlayerCarFlasher : MonoBehaviour
 
     void Update()
     {
+        // The PlayerController handles first input and calls TriggerFadeOut, we keep a fallback here
         if (isFlashing && !isFadingOut && (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0))
         {
-            StartCoroutine(FadeOutFlashing());
+            TriggerFadeOut();
         }
     }
 
-    private IEnumerator FlashEffect()
+    public IEnumerator FlashEffect()
     {
-        float intensity = initialIntensity;
-
         while (isFlashing)
         {
             float t = (Mathf.Sin(Time.time * flashSpeed) + 1f) / 2f;
-            Color currentColor = flashColor * t * intensity;
+            Color currentColor = flashColor * t * initialIntensity;
 
             foreach (Material mat in flashMats)
             {
@@ -63,6 +63,13 @@ public class PlayerCarFlasher : MonoBehaviour
         }
     }
 
+    // Public method other scripts call to start fade-out
+    public void TriggerFadeOut()
+    {
+        if (isFadingOut || !isFlashing) return;
+        StartCoroutine(FadeOutFlashing());
+    }
+
     private IEnumerator FadeOutFlashing()
     {
         isFadingOut = true;
@@ -70,7 +77,7 @@ public class PlayerCarFlasher : MonoBehaviour
         if (flashRoutine != null)
             StopCoroutine(flashRoutine);
 
-        // Record current emission colors
+        // record current emission
         Color[] initialColors = new Color[flashMats.Length];
         for (int i = 0; i < flashMats.Length; i++)
             initialColors[i] = flashMats[i].GetColor("_EmissionColor");
@@ -89,10 +96,8 @@ public class PlayerCarFlasher : MonoBehaviour
             yield return null;
         }
 
-        foreach (Material mat in flashMats)
-        {
-            mat.SetColor("_EmissionColor", Color.black);
-        }
+        for (int i = 0; i < flashMats.Length; i++)
+            flashMats[i].SetColor("_EmissionColor", Color.black);
 
         isFlashing = false;
         isFadingOut = false;
