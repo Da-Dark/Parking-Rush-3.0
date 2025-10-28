@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -51,7 +50,7 @@ public class PlayerController : MonoBehaviour
         transform.Translate(Vector3.left * Time.deltaTime * Speed * forwardInput);
         transform.Rotate(Vector3.up * Time.deltaTime * turnSpeed * horizontalInput);
 
-        // Keep player within bounds
+        // Clamp
         transform.position = new Vector3(
             Mathf.Clamp(transform.position.x, -xRange, xRange),
             transform.position.y,
@@ -114,12 +113,14 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Option A: die when hitting any car
         if (other.CompareTag("ParkedCars") || other.CompareTag("MovingCar"))
         {
             Debug.Log("PlayerController: Player hit a car!");
-            Deathscreen.SetActive(true);
-            Time.timeScale = 0f;
+            if (Deathscreen != null)
+            {
+                Deathscreen.SetActive(true);
+                Time.timeScale = 0f;
+            }
         }
     }
 }
