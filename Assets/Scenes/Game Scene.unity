@@ -3163,7 +3163,6 @@ MonoBehaviour:
   spawnRateIncrease: 39.57
   enableCarSpawning: 1
   flashMarkerPrefab: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
-  currentLevel: 1
 --- !u!1 &390932166 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: baa76f9bf7b22f54dadbd6d8388a889a, type: 3}
@@ -5969,13 +5968,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 623868336}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 214a9d0bc26beb04fbdaa6169a212878, type: 3}
+  m_Script: {fileID: 11500000, guid: d2739ed40932c104ca12cdde411d9a8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flashColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  initialIntensity: 5
-  flashSpeed: 3
-  fadeOutDuration: 2
+  carSpawners: []
+  movingCarPrefab: {fileID: 8174678674033954747, guid: 1548278fc51ae3645864f446dd2b7aa5, type: 3}
+  initialSpawnInterval: 4
+  minSpawnInterval: 1.5
+  spawnRateIncrease: 0.1
+  enableCarSpawning: 1
+  flashMarkerPrefab: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
 --- !u!1001 &637078409
 PrefabInstance:
   m_ObjectHideFlags: 0
