@@ -7408,14 +7408,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2739ed40932c104ca12cdde411d9a8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentNamePrefix: Enemy Cars for
-  parkedTag: ParkedCars
-  flashMarkerPrefab: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
   carSpawners: []
   movingCarPrefab: {fileID: 8174678674033954747, guid: 1548278fc51ae3645864f446dd2b7aa5, type: 3}
   initialSpawnInterval: 4
-  spawnRateIncrease: 0.1
   minSpawnInterval: 1.5
+  spawnRateIncrease: 0.1
+  enableCarSpawning: 1
+  flashMarkerPrefab: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
 --- !u!1 &467297167
 GameObject:
   m_ObjectHideFlags: 0
@@ -19997,16 +19996,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2739ed40932c104ca12cdde411d9a8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentNamePrefix: Enemy Cars for
-  parkedTag: ParkedCars
-  flashMarkerPrefab: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
   carSpawners:
   - {fileID: 544199928}
   - {fileID: 703905071}
   movingCarPrefab: {fileID: 8174678674033954747, guid: 1548278fc51ae3645864f446dd2b7aa5, type: 3}
   initialSpawnInterval: 4
-  spawnRateIncrease: 39.57
   minSpawnInterval: 1.5
+  spawnRateIncrease: 39.57
+  enableCarSpawning: 1
+  flashMarkerPrefab: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
 --- !u!4 &1393681637
 Transform:
   m_ObjectHideFlags: 0
@@ -26351,6 +26349,10 @@ PrefabInstance:
     - target: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
       propertyPath: m_Name
       value: FlashMarkerPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
+      propertyPath: m_TagString
+      value: Marker
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5213034723849228408, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}

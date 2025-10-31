@@ -1,18 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
 
 public class Menu : MonoBehaviour
 {
     public void OnPlayButton()
     {
-        SceneManager.LoadScene(1); //level 1
+        SceneManager.LoadScene(1); // Load level 1 or whichever scene you want
     }
 
     public void OnQuitButton()
     {
-       Application.Quit()  ; //Quit Game
+        Debug.Log("Quit button pressed");
+        Application.Quit();
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false; // For testing inside the editor
+#endif
     }
 }
