@@ -46,6 +46,8 @@ public class PlayerController : MonoBehaviour
                 carFlasher.TriggerFadeOut();
         }
 
+        
+
         // Movement
         transform.Translate(Vector3.left * Time.deltaTime * Speed * forwardInput);
         transform.Rotate(Vector3.up * Time.deltaTime * turnSpeed * horizontalInput);
@@ -108,7 +110,7 @@ public class PlayerController : MonoBehaviour
             LevelCounterManager.Instance.AddLevel();
 
         if (SpawnManager != null)
-            SpawnManager.OpenSpot();
+            SpawnManager.OpenSingleSpot();
     }
 
     private void OnTriggerEnter(Collider other)

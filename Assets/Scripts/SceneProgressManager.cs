@@ -3,25 +3,34 @@ using UnityEngine.SceneManagement;
 
 public class SceneProgressManager : MonoBehaviour
 {
-    [Tooltip("Name or build index of the next map scene.")]
-    public string nextSceneName = "SecondMap";  // Replace with your actual second scene name
+    [Tooltip("Build index of the next scene in Build Settings.")]
+    public int nextSceneBuildIndex = 2;
 
-    [Tooltip("Level number to reach before switching scenes.")]
-    public int levelThreshold = 5;
+    [Tooltip("Level number required before loading the next scene.")]
+    public int levelThreshold = 3;
+
+    private bool hasLoadedNextScene = false;
 
     private void Update()
     {
-        // Check if LevelCounterManager exists and player reached threshold
-        if (LevelCounterManager.Instance != null &&
-            LevelCounterManager.Instance.GetCurrentLevel() >= levelThreshold)
+        if (hasLoadedNextScene)
+            return;
+
+        if (LevelCounterManager.Instance == null)
+            return;
+
+        int currentLevel = LevelCounterManager.Instance.GetCurrentLevel();
+
+        if (currentLevel >= levelThreshold)
         {
+            hasLoadedNextScene = true;
             LoadNextScene();
         }
     }
 
     private void LoadNextScene()
     {
-        Debug.Log($"SceneProgressManager: Level {levelThreshold} reached, loading {nextSceneName}...");
-        SceneManager.LoadScene(nextSceneName);
+        Debug.Log($"SceneProgressManager: Level threshold reached, loading scene with index {nextSceneBuildIndex}...");
+        SceneManager.LoadScene(nextSceneBuildIndex);
     }
 }
