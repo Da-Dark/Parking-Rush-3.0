@@ -3,52 +3,32 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    [Header("UI")]
-    public GameObject pauseMenu; // assign your PauseMenu Canvas/GameObject here
-
-    private bool isPaused = false;
-
-    void Start()
+    private void OnEnable()
     {
-        // Ensure the menu starts inactive
-        if (pauseMenu != null)
-            pauseMenu.SetActive(false);
+        // Pause the game when menu becomes active
+        Time.timeScale = 0f;
     }
 
-    void Update()
+    private void OnDisable()
     {
-        // Toggle pause menu when P or Escape is pressed
-        if (Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape))
-        {
-            TogglePause();
-        }
+        // Resume the game when menu is closed
+        Time.timeScale = 1f;
     }
 
-    private void TogglePause()
-    {
-        if (pauseMenu == null) return;
-
-        isPaused = !isPaused;
-        pauseMenu.SetActive(isPaused);
-        Time.timeScale = isPaused ? 0f : 1f;
-    }
-
-    // Button methods
+    // Called by Resume button
     public void OnResumeButton()
     {
-        if (pauseMenu == null) return;
-
-        pauseMenu.SetActive(false);
-        Time.timeScale = 1f;
-        isPaused = false;
+        gameObject.SetActive(false); // This triggers OnDisable() and resumes the game
     }
 
+    // Called by Restart button
     public void OnRestartButton()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    // Called by Quit button
     public void OnQuitButton()
     {
         Time.timeScale = 1f;
