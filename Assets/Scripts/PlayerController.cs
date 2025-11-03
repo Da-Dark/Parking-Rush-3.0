@@ -14,20 +14,25 @@ public class PlayerController : MonoBehaviour
     private Quaternion initialRot;
 
     [Header("References")]
-    public SpawnManager SpawnManager;
+    public SpawnManager SpawnManager; // Auto-found if not assigned
     public GameObject Deathscreen;
 
     [Header("Bounds")]
     public float xRange = 9.5f;
     public float zRange = 5.7f;
 
-    private PlayerCarFlasher carFlasher;
-
     void Start()
     {
         initialPos = transform.position;
         initialRot = transform.rotation;
-        carFlasher = GetComponent<PlayerCarFlasher>();
+
+        // Auto-find SpawnManager if not assigned
+        if (SpawnManager == null)
+        {
+            SpawnManager = FindObjectOfType<SpawnManager>();
+            if (SpawnManager == null)
+                Debug.LogWarning("PlayerController: SpawnManager not found in scene.");
+        }
     }
 
     void Update()
@@ -39,20 +44,16 @@ public class PlayerController : MonoBehaviour
         {
             hasMadeFirstMove = true;
 
+            // Hide the glow marker when player first moves
             if (SpawnManager != null)
                 SpawnManager.HideGlowMarker();
-
-            if (carFlasher != null)
-                carFlasher.TriggerFadeOut();
         }
-
-        
 
         // Movement
         transform.Translate(Vector3.left * Time.deltaTime * Speed * forwardInput);
         transform.Rotate(Vector3.up * Time.deltaTime * turnSpeed * horizontalInput);
 
-        // Clamp
+        // Keep player within screen bounds
         transform.position = new Vector3(
             Mathf.Clamp(transform.position.x, -xRange, xRange),
             transform.position.y,
@@ -101,23 +102,35 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLevelSuccess()
     {
-        Debug.Log("PlayerController: Level Completed!");
+        Debug.Log("✅ PlayerController: Level Completed!");
+
+        // Reset player position + rotation
         transform.position = initialPos;
         transform.rotation = initialRot;
         hasMadeFirstMove = false;
 
+        // Increase level count
         if (LevelCounterManager.Instance != null)
             LevelCounterManager.Instance.AddLevel();
 
+        // 🧠 Tell SpawnManager to open exactly one new spot for the next level
         if (SpawnManager != null)
-            SpawnManager.OpenSingleSpot();
+        {
+            SpawnManager.ResetLevelOpenFlag();
+            SpawnManager.OpenSpot(false);
+        }
+        else
+        {
+            Debug.LogWarning("PlayerController: SpawnManager is null when trying to open next spot.");
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        // Player dies if touching a car
         if (other.CompareTag("ParkedCars") || other.CompareTag("MovingCar"))
         {
-            Debug.Log("PlayerController: Player hit a car!");
+            Debug.Log("💀 PlayerController: Player hit a car!");
             if (Deathscreen != null)
             {
                 Deathscreen.SetActive(true);

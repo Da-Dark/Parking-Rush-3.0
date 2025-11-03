@@ -4,6 +4,18 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    [Header("Parking Spots")]
+    public List<GameObject> parkedCars = new List<GameObject>();
+    public GameObject openSpotPrefab;
+    public Transform[] parkingSpots;
+    private GameObject currentOpenSpot;
+    private bool hasShownMarkerThisMap = false;
+    private bool hasOpenedSpotThisLevel = false;
+
+    [Header("Glow Marker")]
+    public GameObject glowMarkerPrefab;
+    private GameObject activeGlowMarker;
+
     [Header("Car Spawning")]
     public List<Transform> carSpawners;
     public GameObject movingCarPrefab;
@@ -12,131 +24,120 @@ public class SpawnManager : MonoBehaviour
     public float spawnRateIncrease = 0.1f;
     public bool enableCarSpawning = true;
 
-    [Header("Parked Cars & Open Spot")]
-    public GameObject glowMarkerPrefab;
-    private List<GameObject> allParkedCars = new List<GameObject>();
-    private GameObject currentOpenSpotMarker;
-    private GameObject currentOpenCar;
-
     private float currentSpawnInterval;
-    private bool openSpotActive = false;
+    private bool isSpawningCars = true;
 
-    private void Awake()
+    void Start()
     {
         currentSpawnInterval = initialSpawnInterval;
-    }
 
-    private IEnumerator Start()
-    {
-        // Wait one frame to ensure other managers (like LevelCounterManager) are initialized
-        yield return null;
-
-        // Collect all parked cars in this scene
-        CollectAllParkedCars();
-
-        // Activate them
-        foreach (var car in allParkedCars)
-        {
-            if (car != null)
-                car.SetActive(true);
-        }
-
-        // Create one open spot
-        OpenSingleSpot();
+        // Always open one spot when the first map starts
+        hasShownMarkerThisMap = false;
+        hasOpenedSpotThisLevel = false;
+        OpenSingleSpot(true);
 
         // Start car spawning if enabled
         if (enableCarSpawning)
             StartCoroutine(SpawnCarsRoutine());
     }
 
-    private void CollectAllParkedCars()
+    // Called when new map loads
+    public void ResetLevelOpenFlag()
     {
-        allParkedCars.Clear();
-        GameObject[] parkedCars = GameObject.FindGameObjectsWithTag("ParkedCars");
-        allParkedCars.AddRange(parkedCars);
-
-        Debug.Log($"SpawnManager: Collected {allParkedCars.Count} parked cars in {UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}");
+        hasShownMarkerThisMap = false;
+        hasOpenedSpotThisLevel = false;
     }
 
-    public void OpenSingleSpot()
+    // Core function that opens exactly one open spot
+    public void OpenSingleSpot(bool isInitial)
     {
-        if (allParkedCars.Count == 0)
+        if (hasOpenedSpotThisLevel)
+            return;
+
+        List<GameObject> activeParkedCars = new List<GameObject>();
+        foreach (GameObject car in parkedCars)
         {
-            Debug.LogWarning("SpawnManager: No active parked cars found!");
+            if (car != null && car.activeInHierarchy)
+                activeParkedCars.Add(car);
+        }
+
+        if (activeParkedCars.Count == 0)
+        {
+            Debug.LogWarning("SpawnManager: No active parked cars left!");
             return;
         }
 
-        // Pick one random parked car to remove
-        int randomIndex = Random.Range(0, allParkedCars.Count);
-        GameObject selectedCar = allParkedCars[randomIndex];
+        int randomIndex = Random.Range(0, activeParkedCars.Count);
+        GameObject selectedCar = activeParkedCars[randomIndex];
 
-        if (selectedCar == null)
-        {
-            Debug.LogWarning("SpawnManager: Selected parked car was null!");
-            return;
-        }
-
-        currentOpenCar = selectedCar;
-        allParkedCars.Remove(selectedCar);
-
-        // Hide the parked car to create an open spot
+        // Remove that parked car to make an open spot
         selectedCar.SetActive(false);
-        openSpotActive = true;
 
-        Debug.Log($"SpawnManager: Created open spot at {selectedCar.transform.position}");
+        Vector3 spotPos = selectedCar.transform.position;
+        Quaternion spotRot = selectedCar.transform.rotation;
 
-        // Only show glow marker if on Level 1
-        if (LevelCounterManager.Instance != null && LevelCounterManager.Instance.GetCurrentLevel() == 1)
+        currentOpenSpot = Instantiate(openSpotPrefab, spotPos, spotRot);
+        hasOpenedSpotThisLevel = true;
+
+        // Only show glow marker for first open spot on each map
+        if (!hasShownMarkerThisMap)
         {
-            ShowGlowMarker(selectedCar.transform.position);
+            ShowGlowMarker(spotPos);
+            hasShownMarkerThisMap = true;
         }
-    }
-
-    private void ShowGlowMarker(Vector3 position)
-    {
-        if (glowMarkerPrefab == null)
-        {
-            Debug.LogWarning("SpawnManager: Glow marker prefab not assigned!");
-            return;
-        }
-
-        currentOpenSpotMarker = Instantiate(glowMarkerPrefab, position + Vector3.up * 1.5f, Quaternion.identity);
     }
 
     public void HideGlowMarker()
     {
-        if (currentOpenSpotMarker != null)
+        if (activeGlowMarker != null)
         {
-            Destroy(currentOpenSpotMarker);
-            currentOpenSpotMarker = null;
+            Destroy(activeGlowMarker);
+            activeGlowMarker = null;
         }
     }
 
+    private void ShowGlowMarker(Vector3 pos)
+    {
+        if (glowMarkerPrefab == null) return;
+        activeGlowMarker = Instantiate(glowMarkerPrefab, pos + Vector3.up * 2f, Quaternion.identity);
+    }
+
+    // Reset open-spot flag each level
+    public void OpenSpot(bool isInitial)
+    {
+        hasOpenedSpotThisLevel = false;
+        OpenSingleSpot(isInitial);
+    }
+
+    // -------------------------------------
+    // Car Spawning System
+    // -------------------------------------
     private IEnumerator SpawnCarsRoutine()
     {
-        while (enableCarSpawning)
+        while (isSpawningCars)
         {
+            SpawnRandomCar();
             yield return new WaitForSeconds(currentSpawnInterval);
-            SpawnMovingCar();
-
-            currentSpawnInterval = Mathf.Max(currentSpawnInterval - spawnRateIncrease, minSpawnInterval);
+            currentSpawnInterval = Mathf.Max(minSpawnInterval, currentSpawnInterval - spawnRateIncrease);
         }
     }
 
-    private void SpawnMovingCar()
+    private void SpawnRandomCar()
     {
-        if (carSpawners.Count == 0 || movingCarPrefab == null)
-            return;
-
-        Transform spawnPoint = carSpawners[Random.Range(0, carSpawners.Count)];
-        Instantiate(movingCarPrefab, spawnPoint.position, spawnPoint.rotation);
-    }
-
-    private void ClearExistingMarkers()
-    {
-        foreach (var marker in GameObject.FindGameObjectsWithTag("GlowMarker"))
+        if (movingCarPrefab == null || carSpawners.Count == 0)
         {
-            Destroy(marker);
+            Debug.LogWarning("SpawnManager: Missing moving car prefab or spawner points.");
+            return;
+        }
+
+        int randomIndex = Random.Range(0, carSpawners.Count);
+        Transform spawnPoint = carSpawners[randomIndex];
+        GameObject car = Instantiate(movingCarPrefab, spawnPoint.position, spawnPoint.rotation);
+
+        if (car == null)
+        {
+            Debug.LogWarning("SpawnManager: Car instantiation failed (prefab or component missing).");
+            return;
         }
     }
 }
