@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement;
 
 public class LevelCounterManager : MonoBehaviour
 {
     public static LevelCounterManager Instance;
 
     [Header("UI")]
-    public TextMeshProUGUI levelCounterText;  // Assign in Inspector if possible
+    [Tooltip("Assign the Level Counter TMP text in gameplay scenes only.")]
+    public TextMeshProUGUI levelCounterText;
 
     private int levelCount = 1; // Start at Level 1
 
@@ -24,35 +24,11 @@ public class LevelCounterManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
-        // Try to find UI when scene loads
-        SceneManager.sceneLoaded += (scene, mode) => FindTextObject();
     }
 
     private void Start()
     {
-        if (levelCounterText == null)
-            FindTextObject();
-
         UpdateLevelUI();
-    }
-
-    private void FindTextObject()
-    {
-        // Auto-find any TextMeshProUGUI in the scene
-        if (levelCounterText == null)
-        {
-            levelCounterText = FindObjectOfType<TextMeshProUGUI>();
-        }
-
-        if (levelCounterText != null)
-        {
-            UpdateLevelUI();
-        }
-        else
-        {
-            Debug.LogWarning("⚠️ LevelCounterManager: Could not find a TextMeshProUGUI in this scene!");
-        }
     }
 
     /// <summary>
@@ -91,10 +67,6 @@ public class LevelCounterManager : MonoBehaviour
         if (levelCounterText != null)
         {
             levelCounterText.text = "Level: " + levelCount;
-        }
-        else
-        {
-            Debug.LogWarning("⚠️ LevelCounterManager: levelCounterText not assigned in Inspector!");
         }
     }
 }
