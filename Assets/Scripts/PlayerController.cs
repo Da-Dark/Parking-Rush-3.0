@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     private Quaternion initialRot;
 
     [Header("References")]
-    public SpawnManager SpawnManager; // Auto-found if not assigned
+    public SpawnManager SpawnManager; // auto-found if not set
     public GameObject Deathscreen;
 
     [Header("Bounds")]
@@ -33,6 +33,10 @@ public class PlayerController : MonoBehaviour
             if (SpawnManager == null)
                 Debug.LogWarning("PlayerController: SpawnManager not found in scene.");
         }
+
+        // Make sure SpawnManager knows we’re starting fresh on a map
+        if (SpawnManager != null)
+            SpawnManager.ResetLevelOpenFlag();
     }
 
     void Update()
@@ -44,16 +48,16 @@ public class PlayerController : MonoBehaviour
         {
             hasMadeFirstMove = true;
 
-            // Hide the glow marker when player first moves
+            // Hide glow marker on first movement
             if (SpawnManager != null)
                 SpawnManager.HideGlowMarker();
         }
 
-        // Movement
+        // Movement logic
         transform.Translate(Vector3.left * Time.deltaTime * Speed * forwardInput);
         transform.Rotate(Vector3.up * Time.deltaTime * turnSpeed * horizontalInput);
 
-        // Keep player within screen bounds
+        // Keep player within map bounds
         transform.position = new Vector3(
             Mathf.Clamp(transform.position.x, -xRange, xRange),
             transform.position.y,
@@ -103,21 +107,18 @@ public class PlayerController : MonoBehaviour
     private void HandleLevelSuccess()
     {
         Debug.Log("✅ PlayerController: Level Completed!");
-
-        // Reset player position + rotation
         transform.position = initialPos;
         transform.rotation = initialRot;
         hasMadeFirstMove = false;
 
-        // Increase level count
         if (LevelCounterManager.Instance != null)
             LevelCounterManager.Instance.AddLevel();
 
-        // 🧠 Tell SpawnManager to open exactly one new spot for the next level
+        // Tell SpawnManager to open a new single spot (without duplicate)
         if (SpawnManager != null)
         {
-            SpawnManager.ResetLevelOpenFlag();
-            SpawnManager.OpenSpot(false);
+            SpawnManager.ResetLevelOpenFlag();  // Reset spawn control
+            SpawnManager.OpenSpot(false);       // Spawn one new open spot, no marker
         }
         else
         {
@@ -127,10 +128,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Player dies if touching a car
         if (other.CompareTag("ParkedCars") || other.CompareTag("MovingCar"))
         {
-            Debug.Log("💀 PlayerController: Player hit a car!");
+            Debug.Log("💥 PlayerController: Player hit a car!");
             if (Deathscreen != null)
             {
                 Deathscreen.SetActive(true);
