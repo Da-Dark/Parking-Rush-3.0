@@ -8,6 +8,9 @@ TagManager:
   - SuccessCollision
   - Turn Collision
   - Marker
+  - Slow
+  - Medium
+  - Fast
   layers:
   - Default
   - TransparentFX

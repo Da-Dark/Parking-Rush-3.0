@@ -7410,9 +7410,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   carSpawners: []
   movingCarPrefab: {fileID: 8174678674033954747, guid: 1548278fc51ae3645864f446dd2b7aa5, type: 3}
-  initialSpawnInterval: 4
-  minSpawnInterval: 1.5
-  spawnRateIncrease: 0.1
+  slowSpawnInterval: 4
+  mediumSpawnInterval: 2.5
+  fastSpawnInterval: 1.2
+  slowCarSpeed: 3
+  mediumCarSpeed: 5
+  fastCarSpeed: 8
   enableCarSpawning: 1
   openSpotPrefab: {fileID: 0}
   flashMarkerPrefab: {fileID: 0}
@@ -20001,11 +20004,14 @@ MonoBehaviour:
   - {fileID: 544199928}
   - {fileID: 703905071}
   movingCarPrefab: {fileID: 8174678674033954747, guid: 1548278fc51ae3645864f446dd2b7aa5, type: 3}
-  initialSpawnInterval: 4
-  minSpawnInterval: 1.5
-  spawnRateIncrease: 39.57
+  slowSpawnInterval: 4
+  mediumSpawnInterval: 2.5
+  fastSpawnInterval: 1.2
+  slowCarSpeed: 3
+  mediumCarSpeed: 5
+  fastCarSpeed: 8
   enableCarSpawning: 1
-  openSpotPrefab: {fileID: 1463192567}
+  openSpotPrefab: {fileID: 759240752786289191, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
   flashMarkerPrefab: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
 --- !u!4 &1393681637
 Transform:

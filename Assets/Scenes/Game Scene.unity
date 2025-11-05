@@ -2126,7 +2126,7 @@ GameObject:
   - component: {fileID: 254510413}
   m_Layer: 0
   m_Name: Moving Car Spawner
-  m_TagString: Untagged
+  m_TagString: Medium
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3304,9 +3304,12 @@ MonoBehaviour:
   - {fileID: 1952975913}
   - {fileID: 1690634180}
   movingCarPrefab: {fileID: 8174678674033954747, guid: 1548278fc51ae3645864f446dd2b7aa5, type: 3}
-  initialSpawnInterval: 4
-  minSpawnInterval: 1.5
-  spawnRateIncrease: 0.1
+  slowSpawnInterval: 4
+  mediumSpawnInterval: 0.91
+  fastSpawnInterval: 1.2
+  slowCarSpeed: 3
+  mediumCarSpeed: 3.2
+  fastCarSpeed: 8
   enableCarSpawning: 1
   openSpotPrefab: {fileID: 2129987941}
   flashMarkerPrefab: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
@@ -6239,9 +6242,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   carSpawners: []
   movingCarPrefab: {fileID: 0}
-  initialSpawnInterval: 4
-  minSpawnInterval: 1.5
-  spawnRateIncrease: 0.1
+  slowSpawnInterval: 4
+  mediumSpawnInterval: 2.5
+  fastSpawnInterval: 1.2
+  slowCarSpeed: 3
+  mediumCarSpeed: 5
+  fastCarSpeed: 8
   enableCarSpawning: 1
   openSpotPrefab: {fileID: 0}
   flashMarkerPrefab: {fileID: 0}
@@ -11096,7 +11102,7 @@ GameObject:
   - component: {fileID: 991342384}
   m_Layer: 0
   m_Name: Moving Car Spawner 2
-  m_TagString: Untagged
+  m_TagString: Medium
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14889,7 +14895,7 @@ GameObject:
   - component: {fileID: 1283212568}
   m_Layer: 0
   m_Name: Moving Car Spawner 4
-  m_TagString: Untagged
+  m_TagString: Medium
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20817,7 +20823,7 @@ GameObject:
   - component: {fileID: 1690634177}
   m_Layer: 0
   m_Name: Moving Car Spawner 6
-  m_TagString: Untagged
+  m_TagString: Medium
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21126,6 +21132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b90bde20a7e9bc4c8cca6787284cba7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  quitButtonText: {fileID: 0}
 --- !u!4 &1722781059
 Transform:
   m_ObjectHideFlags: 0
@@ -24278,7 +24285,7 @@ GameObject:
   - component: {fileID: 1952975910}
   m_Layer: 0
   m_Name: Moving Car Spawner 5
-  m_TagString: Untagged
+  m_TagString: Medium
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24908,7 +24915,7 @@ GameObject:
   - component: {fileID: 1998671117}
   m_Layer: 0
   m_Name: Moving Car Spawner 3
-  m_TagString: Untagged
+  m_TagString: Medium
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25669,59 +25676,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.4013958, y: 0.3941941, z: 0.593503}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &2129987941
+--- !u!1 &2129987941 stripped
 GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 759240752786289191, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
+  m_PrefabInstance: {fileID: 8814023984253369185}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2129987943}
-  - component: {fileID: 2129987942}
-  m_Layer: 0
-  m_Name: OpenSpotPrefab
-  m_TagString: SuccessCollision
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!65 &2129987942
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2129987941}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!4 &2129987943
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2129987941}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.16, y: 0.26, z: -8.08}
-  m_LocalScale: {x: 1.3579514, y: 1, z: 0.86044}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2137274008 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
@@ -25753,6 +25712,63 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.13365977, y: 0.241247, z: 0.11999995}
   m_Center: {x: -0.006829889, y: 0.060623497, z: 0}
+--- !u!1001 &8814023984253369185
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 759240752786289191, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
+      propertyPath: m_Name
+      value: OpenSpotPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 6869425929712502788, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.16
+      objectReference: {fileID: 0}
+    - target: {fileID: 6869425929712502788, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 6869425929712502788, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -8.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 6869425929712502788, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6869425929712502788, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6869425929712502788, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6869425929712502788, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6869425929712502788, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6869425929712502788, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6869425929712502788, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -25795,5 +25811,5 @@ SceneRoots:
   - {fileID: 477467795}
   - {fileID: 1300461804}
   - {fileID: 1308823373}
-  - {fileID: 2129987943}
+  - {fileID: 8814023984253369185}
   - {fileID: 785022930}
