@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -34,7 +35,7 @@ public class PlayerController : MonoBehaviour
                 Debug.LogWarning("PlayerController: SpawnManager not found in scene.");
         }
 
-        // Make sure SpawnManager knows we’re starting fresh on a map
+        // Only reset open flag on first load, not during pause
         if (SpawnManager != null)
             SpawnManager.ResetLevelOpenFlag();
     }
@@ -44,11 +45,12 @@ public class PlayerController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         forwardInput = Input.GetAxis("Vertical");
 
+        // Detect first movement input
         if (!hasMadeFirstMove && (Mathf.Abs(horizontalInput) > 0.01f || Mathf.Abs(forwardInput) > 0.01f))
         {
             hasMadeFirstMove = true;
 
-            // Hide glow marker on first movement
+            // Hide glow marker only after first player input
             if (SpawnManager != null)
                 SpawnManager.HideGlowMarker();
         }
@@ -117,8 +119,8 @@ public class PlayerController : MonoBehaviour
         // Tell SpawnManager to open a new single spot (without duplicate)
         if (SpawnManager != null)
         {
-            SpawnManager.ResetLevelOpenFlag();  // Reset spawn control
-            SpawnManager.OpenSpot(false);       // Spawn one new open spot, no marker
+            SpawnManager.ResetLevelOpenFlag();
+            SpawnManager.OpenSpot(false);
         }
         else
         {
@@ -137,5 +139,23 @@ public class PlayerController : MonoBehaviour
                 Time.timeScale = 0f;
             }
         }
+    }
+
+    // Called by restart button on Deathscreen
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+
+        if (LevelCounterManager.Instance != null)
+            LevelCounterManager.Instance.ResetCounter();
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    // Called by quit button on Deathscreen
+    public void QuitToMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Menu"); // Make sure your menu scene name matches
     }
 }

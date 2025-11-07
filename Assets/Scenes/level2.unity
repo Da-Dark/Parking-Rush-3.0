@@ -7408,17 +7408,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2739ed40932c104ca12cdde411d9a8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  carSpawners: []
   movingCarPrefab: {fileID: 8174678674033954747, guid: 1548278fc51ae3645864f446dd2b7aa5, type: 3}
+  carSpawnPoints: []
   slowSpawnInterval: 4
   mediumSpawnInterval: 2.5
   fastSpawnInterval: 1.2
+  spawnIntervalVariance: 0.4
+  firstSpawnDelay: 0
+  parkedCars: []
+  openSpotPrefab: {fileID: 0}
+  flashMarkerPrefab: {fileID: 0}
   slowCarSpeed: 3
   mediumCarSpeed: 5
   fastCarSpeed: 8
-  enableCarSpawning: 1
-  openSpotPrefab: {fileID: 0}
-  flashMarkerPrefab: {fileID: 0}
 --- !u!1 &467297167
 GameObject:
   m_ObjectHideFlags: 0
@@ -8208,7 +8210,7 @@ GameObject:
   - component: {fileID: 544199925}
   m_Layer: 0
   m_Name: Moving Car Spawner (1)
-  m_TagString: Untagged
+  m_TagString: Fast
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10293,7 +10295,7 @@ GameObject:
   - component: {fileID: 703905068}
   m_Layer: 0
   m_Name: Moving Car Spawner
-  m_TagString: Untagged
+  m_TagString: Fast
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14739,9 +14741,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 344484924}
-        m_TargetAssemblyTypeName: Deathscreen, Assembly-CSharp
-        m_MethodName: OnRestartButton
+      - m_Target: {fileID: 1319577817}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: RestartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -20000,19 +20002,79 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2739ed40932c104ca12cdde411d9a8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  carSpawners:
-  - {fileID: 544199928}
-  - {fileID: 703905071}
   movingCarPrefab: {fileID: 8174678674033954747, guid: 1548278fc51ae3645864f446dd2b7aa5, type: 3}
+  carSpawnPoints:
+  - {fileID: 703905067}
+  - {fileID: 544199924}
   slowSpawnInterval: 4
   mediumSpawnInterval: 2.5
-  fastSpawnInterval: 1.2
-  slowCarSpeed: 3
-  mediumCarSpeed: 5
-  fastCarSpeed: 8
-  enableCarSpawning: 1
+  fastSpawnInterval: 0.81
+  spawnIntervalVariance: 0.4
+  firstSpawnDelay: 0
+  parkedCars:
+  - {fileID: 28443629}
+  - {fileID: 947046250}
+  - {fileID: 1208948552}
+  - {fileID: 2068070523}
+  - {fileID: 2028483122}
+  - {fileID: 7216236}
+  - {fileID: 1493517552}
+  - {fileID: 1395696325}
+  - {fileID: 399157693}
+  - {fileID: 1981681394}
+  - {fileID: 378397188}
+  - {fileID: 284612520}
+  - {fileID: 1552095143}
+  - {fileID: 1611515159}
+  - {fileID: 808061128}
+  - {fileID: 1303930400}
+  - {fileID: 723925044}
+  - {fileID: 1290375807}
+  - {fileID: 176728101}
+  - {fileID: 1825254041}
+  - {fileID: 759909838}
+  - {fileID: 1219449979}
+  - {fileID: 132399419}
+  - {fileID: 1777661801}
+  - {fileID: 717845780}
+  - {fileID: 1650093204}
+  - {fileID: 36472690}
+  - {fileID: 216103385}
+  - {fileID: 1690732205}
+  - {fileID: 1637619379}
+  - {fileID: 1894232445}
+  - {fileID: 2025381427}
+  - {fileID: 2123767307}
+  - {fileID: 1968282663}
+  - {fileID: 529105775}
+  - {fileID: 141671377}
+  - {fileID: 2120461986}
+  - {fileID: 1029541404}
+  - {fileID: 1077577417}
+  - {fileID: 1339260205}
+  - {fileID: 1119282918}
+  - {fileID: 176171985}
+  - {fileID: 1630156511}
+  - {fileID: 256540804}
+  - {fileID: 101732564}
+  - {fileID: 251671586}
+  - {fileID: 732196054}
+  - {fileID: 845051787}
+  - {fileID: 969557262}
+  - {fileID: 1429087694}
+  - {fileID: 403713643}
+  - {fileID: 491110716}
+  - {fileID: 1979323375}
+  - {fileID: 677395827}
+  - {fileID: 634226512}
+  - {fileID: 215129688}
+  - {fileID: 553541337}
+  - {fileID: 1756139062}
   openSpotPrefab: {fileID: 759240752786289191, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
   flashMarkerPrefab: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
+  slowCarSpeed: 3
+  mediumCarSpeed: 5
+  fastCarSpeed: 6.27
 --- !u!4 &1393681637
 Transform:
   m_ObjectHideFlags: 0
@@ -22168,9 +22230,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 344484924}
-        m_TargetAssemblyTypeName: Deathscreen, Assembly-CSharp
-        m_MethodName: OnQuitButton
+      - m_Target: {fileID: 1319577817}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: QuitToMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

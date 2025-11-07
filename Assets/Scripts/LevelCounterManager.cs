@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class LevelCounterManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class LevelCounterManager : MonoBehaviour
     public TextMeshProUGUI levelCounterText;
 
     private int levelCount = 1; // Start at Level 1
+    private int lastSceneIndex;
 
     private void Awake()
     {
@@ -18,6 +20,7 @@ public class LevelCounterManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -28,6 +31,13 @@ public class LevelCounterManager : MonoBehaviour
 
     private void Start()
     {
+        UpdateLevelUI();
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Detect when a new scene is loaded
+        lastSceneIndex = scene.buildIndex;
         UpdateLevelUI();
     }
 
@@ -42,7 +52,7 @@ public class LevelCounterManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Reset the level counter to Level 1 (called when restarting).
+    /// Resets the level counter to Level 1.
     /// </summary>
     public void ResetCounter()
     {
