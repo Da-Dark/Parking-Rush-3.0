@@ -1868,8 +1868,8 @@ GameObject:
   m_TagString: DeathscreenUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
 --- !u!114 &233271086
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1949,7 +1949,7 @@ RectTransform:
   - {fileID: 573498959}
   - {fileID: 1359214502}
   - {fileID: 1821562704}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 949693890}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -5387,7 +5387,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!114 &573498957
 MonoBehaviour:
@@ -6045,12 +6045,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca7cc4befbf92774aa93a4c67dc34911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 3
-  turnSpeed: 145
+  Speed: 5
+  turnSpeed: 134
   SpawnManager: {fileID: 379016092}
   Deathscreen: {fileID: 233271085}
-  xRange: 8.7
-  zRange: 4.52
+  xRange: 9.5
+  zRange: 5.7
 --- !u!65 &608972090
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7922,7 +7922,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &716223133
 RectTransform:
@@ -10526,9 +10526,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathscreenUI: {fileID: 233271085}
-  levelReachedText: {fileID: 573498957}
   restartButton: {fileID: 1359214503}
   quitButton: {fileID: 1821562705}
+  levelReachedText: {fileID: 573498957}
 --- !u!4 &949693890
 Transform:
   m_ObjectHideFlags: 0
@@ -10541,7 +10541,8 @@ Transform:
   m_LocalPosition: {x: -0.17030036, y: -2.4195852, z: 2.9385068}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 233271089}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &953624837
@@ -16834,11 +16835,11 @@ GameObject:
   - component: {fileID: 1359214504}
   - component: {fileID: 1359214503}
   m_Layer: 5
-  m_Name: Restart Button
+  m_Name: RestartButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1359214502
 RectTransform:
@@ -18595,7 +18596,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1522160947
 RectTransform:
@@ -22135,11 +22136,11 @@ GameObject:
   - component: {fileID: 1821562706}
   - component: {fileID: 1821562705}
   m_Layer: 5
-  m_Name: Quit Button
+  m_Name: QuitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1821562704
 RectTransform:
@@ -24478,7 +24479,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1967547470
 RectTransform:
@@ -25886,7 +25887,6 @@ SceneRoots:
   - {fileID: 1690634180}
   - {fileID: 353396996}
   - {fileID: 949693890}
-  - {fileID: 233271089}
   - {fileID: 1405801527}
   - {fileID: 851558779}
   - {fileID: 1741298220}
