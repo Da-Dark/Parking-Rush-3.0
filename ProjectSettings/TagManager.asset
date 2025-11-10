@@ -11,6 +11,9 @@ TagManager:
   - Slow
   - Medium
   - Fast
+  - DeathscreenUI
+  - Deathscreen
+  - MovingCar
   layers:
   - Default
   - TransparentFX

@@ -1865,7 +1865,7 @@ GameObject:
   - component: {fileID: 233271091}
   m_Layer: 5
   m_Name: Deathscreen
-  m_TagString: Untagged
+  m_TagString: DeathscreenUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10496,6 +10496,54 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 394819891}
   m_SourcePrefab: {fileID: 100100000, guid: ca5391d6e95947949895100170aa2f9f, type: 3}
+--- !u!1 &949693888
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 949693890}
+  - component: {fileID: 949693889}
+  m_Layer: 0
+  m_Name: DeathscreenManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &949693889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 949693888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b07b8fc47939ed24d89278c26e4b0f9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathscreenUI: {fileID: 233271085}
+  levelReachedText: {fileID: 573498957}
+  restartButton: {fileID: 1359214503}
+  quitButton: {fileID: 1821562705}
+--- !u!4 &949693890
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 949693888}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.17030036, y: -2.4195852, z: 2.9385068}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &953624837
 GameObject:
   m_ObjectHideFlags: 0
@@ -25837,6 +25885,7 @@ SceneRoots:
   - {fileID: 1952975913}
   - {fileID: 1690634180}
   - {fileID: 353396996}
+  - {fileID: 949693890}
   - {fileID: 233271089}
   - {fileID: 1405801527}
   - {fileID: 851558779}
