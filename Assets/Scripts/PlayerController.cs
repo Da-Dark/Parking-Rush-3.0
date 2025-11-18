@@ -30,6 +30,10 @@ public class PlayerController : MonoBehaviour
             SpawnManager = FindObjectOfType<SpawnManager>();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        // Make sure SpawnManager knows we’re starting fresh on a map
+>>>>>>> parent of 15f59a9 (moving car spawner overhaul + bug fixes)
 =======
         // Make sure SpawnManager knows we’re starting fresh on a map
 >>>>>>> parent of 15f59a9 (moving car spawner overhaul + bug fixes)
@@ -43,7 +47,10 @@ public class PlayerController : MonoBehaviour
         forwardInput = Input.GetAxis("Vertical");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 15f59a9 (moving car spawner overhaul + bug fixes)
         if (!hasMadeFirstMove && (Mathf.Abs(horizontalInput) > 0.01f || Mathf.Abs(forwardInput) > 0.01f))
         {
             hasMadeFirstMove = true;
@@ -141,6 +148,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     // 👇 Add these methods for UI Button OnClick events
 
@@ -177,6 +185,8 @@ public class PlayerController : MonoBehaviour
 
         SceneManager.LoadScene(0);
     }
+=======
+>>>>>>> parent of 15f59a9 (moving car spawner overhaul + bug fixes)
 =======
 >>>>>>> parent of 15f59a9 (moving car spawner overhaul + bug fixes)
 }
