@@ -1,59 +1,133 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SpawnManager : MonoBehaviour
 {
-    [Header("Car Spawning")]
-    [Tooltip("Assign all car spawner transforms (with tags: Slow, Medium, Fast)")]
+    [Header("Car Spawning Settings")]
+    [Tooltip("Assign all car spawner transforms here.")]
+    public List<Transform> carSpawners;
     public GameObject movingCarPrefab;
-    public GameObject[] carSpawnPoints; // Each spawner should be tagged Slow / Medium / Fast
 
-    [Header("Spawn Timing (per tag)")]
-    [Tooltip("Average time between spawns for each speed category")]
+    [Header("Spawn Intervals (seconds)")]
     public float slowSpawnInterval = 4f;
     public float mediumSpawnInterval = 2.5f;
     public float fastSpawnInterval = 1.2f;
 
-    [Tooltip("How much randomness to add to spawn intervals (seconds)")]
-    public float spawnIntervalVariance = 0.4f;
-
-    public float firstSpawnDelay = 0f;
-
-    [Header("Parked Cars System")]
-    public GameObject[] parkedCars;
-    public GameObject openSpotPrefab;
-    public GameObject flashMarkerPrefab;
-
-    private GameObject currentOpenSpotInstance;
-    private GameObject previousOpenSpot;
-    private GameObject activeMarker;
-    private Coroutine markerFlashRoutine;
-    private bool levelOpenSpotSpawned = false;
-
-    [Header("Car Speeds (by tag)")]
+    [Header("Car Speeds")]
     public float slowCarSpeed = 3f;
     public float mediumCarSpeed = 5f;
     public float fastCarSpeed = 8f;
 
-    void Start()
-    {
-        // Randomly open one parking spot
-        OpenSpot(true);
+    [Tooltip("Toggle car spawning on/off.")]
+    public bool enableCarSpawning = true;
 
-        // Start spawn loops for each tag
-        StartCoroutine(SpawnCarsByTag("Slow", slowSpawnInterval));
-        StartCoroutine(SpawnCarsByTag("Medium", mediumSpawnInterval));
-        StartCoroutine(SpawnCarsByTag("Fast", fastSpawnInterval));
+    private float baseSpawnInterval;
+    private float baseCarSpeed;
+
+    [Header("Open Spot System")]
+    public GameObject openSpotPrefab;
+    public GameObject flashMarkerPrefab;
+
+    private GameObject activeMarker;
+    private Coroutine markerFlashRoutine;
+    private GameObject currentOpenSpotInstance;
+
+    private List<GameObject> allParkedCars = new List<GameObject>();
+    private GameObject currentOpenSpot;
+    private GameObject previousOpenSpot;
+    private bool levelOpenSpotSpawned = false;
+
+    private Coroutine randomSpawnerRoutine;
+
+    // -------------------------------
+    // MAIN START
+    // -------------------------------
+    private void Start()
+    {
+        SetBaseSpawnAndSpeedByLevel();
+
+        ClearExistingMarkers();
+        CollectAllParkedCars();
+        ActivateAllParkedCars();
+
+        // Spawn an open spot for level start
+        OpenSpot(LevelCounterManager.Instance == null || LevelCounterManager.Instance.GetCurrentLevel() == 1);
+
+        if (enableCarSpawning)
+            StartRandomSpawnerLoop();
     }
 
     // -------------------------------
-    // OPEN SPOT SYSTEM
+    // LEVEL DIFFICULTY ADJUSTMENT
+    // -------------------------------
+    private void SetBaseSpawnAndSpeedByLevel()
+    {
+        int level = LevelCounterManager.Instance != null ? LevelCounterManager.Instance.GetCurrentLevel() : 1;
+
+        if (level <= 3)
+        {
+            baseSpawnInterval = slowSpawnInterval;
+            baseCarSpeed = slowCarSpeed;
+        }
+        else if (level <= 6)
+        {
+            baseSpawnInterval = mediumSpawnInterval;
+            baseCarSpeed = mediumCarSpeed;
+        }
+        else
+        {
+            baseSpawnInterval = fastSpawnInterval;
+            baseCarSpeed = fastCarSpeed;
+        }
+
+        Debug.Log($"SpawnManager: Level {level} uses base spawn interval {baseSpawnInterval}s and base speed {baseCarSpeed}");
+    }
+
+    // -------------------------------
+    // PARKED CARS SYSTEM
+    // -------------------------------
+    private void CollectAllParkedCars()
+    {
+        allParkedCars.Clear();
+        GameObject[] allObjects = FindObjectsOfType<GameObject>(true);
+
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.CompareTag("ParkedCars"))
+                allParkedCars.Add(obj);
+        }
+
+        Debug.Log($"SpawnManager: Found {allParkedCars.Count} parked cars.");
+    }
+
+    private void ActivateAllParkedCars()
+    {
+        foreach (var car in allParkedCars)
+            if (car != null) car.SetActive(true);
+    }
+
+    private void ClearExistingMarkers()
+    {
+        var oldMarkers = GameObject.FindGameObjectsWithTag("Marker");
+        foreach (var marker in oldMarkers)
+            Destroy(marker);
+    }
+
+    // -------------------------------
+    // OPEN SPOT LOGIC
     // -------------------------------
     public void OpenSpot(bool showMarker = false)
     {
         if (levelOpenSpotSpawned) return;
         levelOpenSpotSpawned = true;
+
+        if (currentOpenSpotInstance != null)
+        {
+            Destroy(currentOpenSpotInstance);
+            currentOpenSpotInstance = null;
+        }
 
         if (previousOpenSpot != null)
         {
@@ -61,26 +135,37 @@ public class SpawnManager : MonoBehaviour
             previousOpenSpot = null;
         }
 
-        foreach (var car in parkedCars)
-            if (car != null) car.SetActive(true);
+        List<GameObject> candidates = new List<GameObject>();
+        foreach (var car in allParkedCars)
+            if (car != null && car.activeInHierarchy)
+                candidates.Add(car);
 
-        GameObject chosen = parkedCars[Random.Range(0, parkedCars.Length)];
-        chosen.SetActive(false);
-        previousOpenSpot = chosen;
+        if (candidates.Count == 0)
+        {
+            Debug.LogWarning("SpawnManager: No active parked cars left!");
+            return;
+        }
+
+        currentOpenSpot = candidates[Random.Range(0, candidates.Count)];
+        currentOpenSpot.SetActive(false);
+        previousOpenSpot = currentOpenSpot;
 
         if (openSpotPrefab != null)
-            currentOpenSpotInstance = Instantiate(openSpotPrefab, chosen.transform.position, chosen.transform.rotation);
+        {
+            currentOpenSpotInstance = Instantiate(
+                openSpotPrefab,
+                currentOpenSpot.transform.position,
+                currentOpenSpot.transform.rotation
+            );
+        }
 
-        Debug.Log($"SpawnManager: Opened spot at {chosen.name}");
+        Debug.Log($"SpawnManager: Opened spot at {currentOpenSpot.name}");
 
         if (showMarker && flashMarkerPrefab != null)
-            SpawnMarkerAt(chosen.transform.position);
+            SpawnMarkerAt(currentOpenSpot.transform.position);
     }
 
-    public void ResetLevelOpenFlag()
-    {
-        levelOpenSpotSpawned = false;
-    }
+    public void ResetLevelOpenFlag() => levelOpenSpotSpawned = false;
 
     private void SpawnMarkerAt(Vector3 position)
     {
@@ -158,65 +243,71 @@ public class SpawnManager : MonoBehaviour
     }
 
     // -------------------------------
-    // MOVING CAR SPAWN SYSTEM
+    // SIMPLIFIED RANDOM CAR SPAWNING
     // -------------------------------
-    private IEnumerator SpawnCarsByTag(string tag, float baseInterval)
+    private void StartRandomSpawnerLoop()
     {
-        yield return new WaitForSeconds(firstSpawnDelay);
+        if (randomSpawnerRoutine != null)
+            StopCoroutine(randomSpawnerRoutine);
 
-        while (true)
+        randomSpawnerRoutine = StartCoroutine(RandomSpawnerRoutine());
+    }
+
+    private IEnumerator RandomSpawnerRoutine()
+    {
+        yield return new WaitForSeconds(Random.Range(0.5f, 1.5f)); // small delay before start
+
+        while (enableCarSpawning)
         {
-            SpawnCarWithTag(tag);
+            if (carSpawners.Count == 0 || movingCarPrefab == null)
+            {
+                Debug.LogWarning("SpawnManager: Missing car prefab or spawners!");
+                yield break;
+            }
 
-            // Add randomness so intervals feel natural
-            float randomOffset = Random.Range(-spawnIntervalVariance, spawnIntervalVariance);
-            float actualInterval = Mathf.Max(0.1f, baseInterval + randomOffset);
-            yield return new WaitForSeconds(actualInterval);
+            // Pick a random spawner from the list
+            Transform spawner = carSpawners[Random.Range(0, carSpawners.Count)];
+
+            // Spawn a car there
+            SpawnCarAt(spawner);
+
+            // Wait a random amount between 0.8x–1.5x of its tag interval
+            float waitTime = GetIntervalForTag(spawner.tag) * Random.Range(0.8f, 1.5f);
+            yield return new WaitForSeconds(waitTime);
         }
     }
 
-    private void SpawnCarWithTag(string tag)
+    private void SpawnCarAt(Transform spawner)
     {
-        if (movingCarPrefab == null || carSpawnPoints.Length == 0)
-        {
-            Debug.LogWarning("SpawnManager: Missing car prefab or spawn points.");
-            return;
-        }
-
-        // Find all spawn points with this tag
-        List<GameObject> taggedSpawns = new List<GameObject>();
-        foreach (var sp in carSpawnPoints)
-        {
-            if (sp != null && sp.CompareTag(tag))
-                taggedSpawns.Add(sp);
-        }
-
-        if (taggedSpawns.Count == 0)
+        if (movingCarPrefab == null || spawner == null)
             return;
 
-        // Randomly pick one spawner with this tag
-        GameObject chosenSpawner = taggedSpawns[Random.Range(0, taggedSpawns.Count)];
-        GameObject newCar = Instantiate(movingCarPrefab, chosenSpawner.transform.position, chosenSpawner.transform.rotation);
+        GameObject car = Instantiate(movingCarPrefab, spawner.position, spawner.rotation);
+        MovingCar carScript = car.GetComponent<MovingCar>();
 
-        // Set car speed based on tag
-        MovingCar carScript = newCar.GetComponent<MovingCar>();
         if (carScript != null)
+            carScript.speed = GetSpeedForTag(spawner.tag);
+    }
+
+    private float GetIntervalForTag(string tag)
+    {
+        return tag switch
         {
-            carScript.speed = GetSpeedForTag(tag);
-            Debug.Log($"Spawned {tag} car at {chosenSpawner.name} → Speed: {carScript.speed}");
-        }
+            "Slow" => slowSpawnInterval,
+            "Medium" => mediumSpawnInterval,
+            "Fast" => fastSpawnInterval,
+            _ => baseSpawnInterval
+        };
     }
 
     private float GetSpeedForTag(string tag)
     {
-        switch (tag)
+        return tag switch
         {
-            case "Slow": return slowCarSpeed;
-            case "Medium": return mediumCarSpeed;
-            case "Fast": return fastCarSpeed;
-            default:
-                Debug.LogWarning($"Spawner tag not recognized: {tag}, using medium speed.");
-                return mediumCarSpeed;
-        }
+            "Slow" => slowCarSpeed,
+            "Medium" => mediumCarSpeed,
+            "Fast" => fastCarSpeed,
+            _ => baseCarSpeed
+        };
     }
 }
