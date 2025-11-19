@@ -4,6 +4,7 @@ using TMPro;
 
 public class Deathscreen : MonoBehaviour
 {
+    //add something to update the level conuter ui
     public TextMeshProUGUI levelReachedText; // assign in inspector
 
     private void OnEnable()
