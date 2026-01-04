@@ -34,19 +34,19 @@ public class PauseMenu : MonoBehaviour
     {
         // Resume the game when menu is closed
         SceneManager.sceneLoaded -= OnSceneLoaded;
-        Time.timeScale = 1f;
     }
 
     // Called by Resume button
     public void OnResumeButton()
     {
+        Time.timeScale = 1;
         gameObject.SetActive(false); // This triggers OnDisable() and resumes the game
     }
     
     // Called by Restart button
     public void OnRestartButton()
     {
-        Time.timeScale = 1f;
+        Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -57,9 +57,9 @@ public class PauseMenu : MonoBehaviour
         if (quitButtonText != null)
         {
             quitButtonText.text = "Quit"; // Replace with whatever default text you want
+            
         }
-
-        Time.timeScale = 1f;
+        Time.timeScale = 1;
         SceneManager.LoadScene(0); // Main menu
     }
 }

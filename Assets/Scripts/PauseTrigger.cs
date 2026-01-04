@@ -12,6 +12,8 @@ public class PauseTrigger : MonoBehaviour
             {
                 // Toggle menu active state
                 pauseMenu.SetActive(!pauseMenu.activeSelf);
+
+                Time.timeScale = pauseMenu.activeSelf ? 0 : 1;
             }
         }
     }

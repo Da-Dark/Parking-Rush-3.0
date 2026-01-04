@@ -1,3 +1,5 @@
+
+/*
 using UnityEngine;
 
 public class PersistentUI : MonoBehaviour
@@ -15,3 +17,5 @@ public class PersistentUI : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 }
+
+*/
