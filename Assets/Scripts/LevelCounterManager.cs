@@ -10,7 +10,7 @@ public class LevelCounterManager : MonoBehaviour
     [Tooltip("Assign the Level Counter TMP text in gameplay scenes only.")]
     public TextMeshProUGUI levelCounterText;
 
-    private int levelCount = 1; // Start at Level 1
+    public int levelCount = 1; // Start at Level 1
     private int lastSceneIndex;
 
     private void Awake()
@@ -46,7 +46,7 @@ public class LevelCounterManager : MonoBehaviour
     /// </summary>
     public void AddLevel()
     {
-        levelCount++;
+        levelCount +=1;
         UpdateLevelUI();
         Debug.Log("📈 Level increased to " + levelCount);
     }

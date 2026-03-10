@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4309,7 +4308,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Level: 0'
+  m_text: 'Level: 3
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4652,6 +4653,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelCounterText: {fileID: 256580641}
+  levelCount: 3
 --- !u!4 &279024091
 Transform:
   m_ObjectHideFlags: 0
@@ -8668,6 +8670,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movingCarPrefab: {fileID: 8174678674033954747, guid: 1548278fc51ae3645864f446dd2b7aa5, type: 3}
   carSpawnPoints:
+  - {fileID: 1446566439}
+  - {fileID: 498308441}
+  - {fileID: 1984542769}
+  slowSpawnInterval: 4
+  mediumSpawnInterval: 1.06
+  fastSpawnInterval: 0.81
+  spawnIntervalVariance: 0.4
+  firstSpawnDelay: 0
+  parkedCars:
   - {fileID: 303243971}
   - {fileID: 1729374185}
   - {fileID: 1847208607}
@@ -8730,12 +8741,6 @@ MonoBehaviour:
   - {fileID: 1727506543}
   - {fileID: 557955673}
   - {fileID: 1411357958}
-  slowSpawnInterval: 4
-  mediumSpawnInterval: 1.06
-  fastSpawnInterval: 0.81
-  spawnIntervalVariance: 0.4
-  firstSpawnDelay: 0
-  parkedCars: []
   openSpotPrefab: {fileID: 759240752786289191, guid: 1ace690c6e079b54cbe8d1faec2de49c, type: 3}
   flashMarkerPrefab: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
   slowCarSpeed: 3
@@ -11107,7 +11112,7 @@ MonoBehaviour:
   firstSpawnDelay: 0
   parkedCars: []
   openSpotPrefab: {fileID: 0}
-  flashMarkerPrefab: {fileID: 8985795512352566415, guid: 1d1b8bf949e1c5043a4f1edf19f5e4bd, type: 3}
+  flashMarkerPrefab: {fileID: 0}
   slowCarSpeed: 3
   mediumCarSpeed: 5
   fastCarSpeed: 8
@@ -12222,7 +12227,7 @@ GameObject:
   - component: {fileID: 837145098}
   - component: {fileID: 837145097}
   m_Layer: 5
-  m_Name: Restart Button
+  m_Name: RestartButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28000,7 +28005,7 @@ GameObject:
   - component: {fileID: 1947532013}
   - component: {fileID: 1947532012}
   m_Layer: 5
-  m_Name: Quit Button
+  m_Name: QuitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29961,10 +29966,10 @@ SceneRoots:
   - {fileID: 1446566443}
   - {fileID: 498308445}
   - {fileID: 1984542773}
+  - {fileID: 1743830943}
   - {fileID: 1606454136}
   - {fileID: 279024091}
   - {fileID: 1378165488}
-  - {fileID: 1743830943}
   - {fileID: 702788517}
   - {fileID: 526430969}
   - {fileID: 1527165279}
